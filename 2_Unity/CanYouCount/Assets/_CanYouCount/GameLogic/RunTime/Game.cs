@@ -1,17 +1,41 @@
 ﻿namespace CanYouCount
 {
-	public class Game
+    public class Game
 	{
-		public int VisibleTileCount;
-		public int TotalTileCount;
+		private int _visibleTileCount;
+		private int _totalTileCount;
 
-		public Tile ExpectedTile;
+		private Tile _expectedTile;
 
-		public Tile[] VisibleTiles;
-	}
+		private Tile[] _visibleTiles;
 
-	public class Tile
-	{
-		public int MyNumber;
-	}
+        public int VisibleTileCount => _visibleTileCount;
+        public Tile[] VisibleTiles => _visibleTiles;
+
+        private IRandomService _randomValueGenerator;
+
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:CanYouCount.Game"/> class.
+        /// </summary>
+        /// <param name="visible">Visible.</param>
+        /// <param name="totalNumber">Total number.</param>
+        public Game(IRandomService service, int visible, int totalNumber)
+        {
+            
+        }
+
+        private int NextNumber()
+        {
+            return _randomValueGenerator.RandInt(1, _totalTileCount);
+        }
+
+
+
+    }
+
+    public class Tile
+    {
+        public int MyNumber;
+    }
 }
