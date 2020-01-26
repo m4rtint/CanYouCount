@@ -62,6 +62,12 @@ namespace CanYouCount.ObjectPooling
 
 		public void ReturnObjectToPool(T poolable)
 		{
+#if UNITY_EDITOR
+			// Check for gameobjects already disposed
+			if (poolable == null || poolable.gameObject == null || _poolableContainer?.gameObject == null)
+				return;
+#endif
+
 			poolable.transform.SetParent(_poolableContainer);
 
 			// Deactivate the poolable
@@ -70,9 +76,15 @@ namespace CanYouCount.ObjectPooling
 			// Add it to the list
 			_poolables.Enqueue(poolable);
 		}
-		
+
 		public void Dispose()
 		{
+#if UNITY_EDITOR
+			// Check for gameobjects already disposed
+			if (_poolableContainer == null || _poolableContainer.gameObject == null)
+				return;
+#endif
+
 			GameObject.Destroy(_poolableContainer.gameObject);
 		}
 	}

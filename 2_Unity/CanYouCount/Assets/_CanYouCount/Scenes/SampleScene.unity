@@ -209,6 +209,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 744203064538533448, guid: 57c4d4d7e5b55b04fb386cf75460e4a5,
+        type: 3}
+      propertyPath: m_BackGroundColor.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 744203064538533448, guid: 57c4d4d7e5b55b04fb386cf75460e4a5,
+        type: 3}
+      propertyPath: m_BackGroundColor.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 744203064538533448, guid: 57c4d4d7e5b55b04fb386cf75460e4a5,
+        type: 3}
+      propertyPath: m_BackGroundColor.b
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 744203064538533451, guid: 57c4d4d7e5b55b04fb386cf75460e4a5,
         type: 3}
       propertyPath: m_Name
@@ -314,7 +329,7 @@ PrefabInstance:
     - target: {fileID: 3388375900780363640, guid: 1fad6c064d03fe24d90a6aeb892d23e9,
         type: 3}
       propertyPath: _tilePadding
-      value: 0.1
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: 3509051174761497420, guid: 1fad6c064d03fe24d90a6aeb892d23e9,
         type: 3}

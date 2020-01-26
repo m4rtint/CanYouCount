@@ -34,6 +34,9 @@ namespace CanYouCount
 				SetEnabled(true);
 
 				_tileValueText.text = tile.TileValue.Value.ToString();
+
+				//PerformShowAnimation();
+				PerformIncorrectTapAnimation();
 			}
 		}
 
@@ -46,8 +49,61 @@ namespace CanYouCount
 
 		public void OnPointerDown(PointerEventData eventData)
 		{
-			_tileBackground.color = Color.green;
 			_game.OnTileTapped(_tile);
+		}
+
+		private void Update()
+		{
+			if (Input.GetKeyDown(KeyCode.K))
+				PerformIncorrectTapAnimation();
+		}
+
+		public void PerformIncorrectTapAnimation()
+		{
+#warning Fix this please :(
+			// Reset state
+			transform.localRotation = Quaternion.identity;
+
+			const float TotalAnimTime = 0.25f;
+			const float TimePerAnim = TotalAnimTime / 5f;
+			const float RotationDegree = 20;
+			var tweenSeq = LeanTween.sequence();
+			tweenSeq.append(transform
+				.LeanRotateZ(RotationDegree, TimePerAnim)
+				.setEase(LeanTweenType.easeInSine));
+			tweenSeq.append(transform
+				.LeanRotateZ(-RotationDegree, TimePerAnim)
+				.setEase(LeanTweenType.easeInOutSine));
+			tweenSeq.append(transform
+				.LeanRotateZ(RotationDegree, TimePerAnim)
+				.setEase(LeanTweenType.easeInOutSine));
+			tweenSeq.append(transform
+				.LeanRotateZ(-RotationDegree, TimePerAnim)
+				.setEase(LeanTweenType.easeInOutSine));
+			tweenSeq.append(transform
+				.LeanRotateZ(0, TimePerAnim)
+				.setEase(LeanTweenType.easeOutSine));
+			tweenSeq.append(() => { transform.localRotation = Quaternion.identity; });
+
+
+			var colorSeq = LeanTween.sequence();
+			var originalColor = _tileBackground.color;
+			colorSeq.append(LeanTween.color(_tileBackground.gameObject, Color.red, TotalAnimTime / 2f));
+			colorSeq.append(LeanTween.color(_tileBackground.gameObject, originalColor, TotalAnimTime / 2f));
+			colorSeq.append(() => { _tileBackground.color = originalColor; });
+		}
+
+		public void PerformShowAnimation()
+		{
+			transform.localScale = Vector3.zero;
+			var anim = transform
+				.LeanScale(Vector3.one, 0.5f)
+				.setEase(LeanTweenType.easeOutBack);
+		}
+
+		public void PerformHideAnimation()
+		{
+
 		}
 	}
 }
