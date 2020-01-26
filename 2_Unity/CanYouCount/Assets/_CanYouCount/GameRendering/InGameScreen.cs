@@ -12,57 +12,38 @@ namespace CanYouCount
 		private TMP_Text _nextTileText = null;
 
 		private Game _game = null;
-		private GameCenterTextDisplay _overworldScreenRenderer = null;
 
-		/// <summary>
-		/// Initialize the specified game.
-		/// </summary>
-		/// <param name="game">Game.</param>
-		public void Initialize(Game game)
+		public override void ShowScreen()
 		{
-			CleanUp();
-			_game = game;
-			_game.OnCorrectTileTapped += OnCorrectTileTapped;
-		}
+			base.ShowScreen();
 
-		/// <summary>
-		/// Updates the user interface.
-		/// </summary>
-		public void UpdateUI()
-		{
-			_timerText.text = string.Format(GameUIContent.TwoDecimalPoint, _game?.Timer);
-		}
+			_game = _applicationManager.Game;
 
-		/// <summary>
-		/// Cleans up.
-		/// </summary>
-		public void CleanUp()
-		{
-			if (_overworldScreenRenderer == null)
+			// Subscribe to game events
+			if (_game != null)
 			{
-				return;
+				_game.OnCorrectTileTapped += OnCorrectTileTapped;
+			}
+		}
+
+		public override void UpdateScreen(float deltaTime)
+		{
+			SetTimeUI(_game?.Timer ?? 0);
+		}
+
+		public override void HideScreen()
+		{
+			// Unsubscribe from game events
+			if (_game != null)
+			{
+				_game.OnCorrectTileTapped += OnCorrectTileTapped;
 			}
 
-			SetNextUI(0);
+			SetNextUI(1);
 			SetTimeUI(0);
-			Destroy(_overworldScreenRenderer);
+
+			base.HideScreen();
 		}
-
-        /// <summary>
-        /// Starts the count down.
-        /// </summary>
-        public void StartCountDown()
-        {
-            _overworldScreenRenderer.StartCountDown();
-        }
-
-        /// <summary>
-        /// Starts the game over.
-        /// </summary>
-        public void StartGameOver(GameOverInfo info)
-        {
-            _overworldScreenRenderer.StartGameOver();
-        }
 
 		private void SetTimeUI(float time)
 		{
@@ -74,9 +55,12 @@ namespace CanYouCount
 			_nextTileText.text = value.ToString();
 		}
 
-		private void OnCorrectTileTapped(Tile originalTile, Tile arg2)
+		private void OnCorrectTileTapped(Tile tappedTile, Tile swappedTile)
 		{
-			SetNextUI(originalTile.TileValue ?? 0 + 1);
+			if (!_game?.IsGameOver ?? true) // If the game exists and is not over
+			{
+				SetNextUI((tappedTile.TileValue ?? 0) + 1);
+			}
 		}
 	}
 }

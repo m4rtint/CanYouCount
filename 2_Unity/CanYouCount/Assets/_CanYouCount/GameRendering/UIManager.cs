@@ -2,8 +2,7 @@
 
 namespace CanYouCount
 {
-	public class
-		UIManager : MonoBehaviour
+	public class UIManager : MonoBehaviour
 	{
 		[Header("UI Screens")]
 		[SerializeField]
@@ -17,12 +16,14 @@ namespace CanYouCount
 		private GameCenterTextDisplay _mainTextRenderer = null;
 
 		private ApplicationManager _appManager;
+		private BaseScreen _currentScreen;
 
 		public void Initialize(ApplicationManager appManager)
 		{
 			_appManager = appManager;
 			_appManager.OnAppStateChanged += HandleAppStateChanged;
 
+			InitializeAllScreens();
 			HideAllScreens();
 		}
 
@@ -31,15 +32,21 @@ namespace CanYouCount
 			_appManager.OnAppStateChanged -= HandleAppStateChanged;
 		}
 
+		public void UpdateUI(float deltaTime)
+		{
+			_currentScreen?.UpdateScreen(deltaTime);
+		}
+
 		private void HandleAppStateChanged(AppStates newState)
 		{
 			switch (newState)
 			{
 				case AppStates.MainMenu:
+					ChangeCurrentScreen(_mainMenuScreen);
 					break;
 
 				case AppStates.Pregame:
-					_inGameScreen.ShowScreen();
+					ChangeCurrentScreen(_inGameScreen);
 
 					_mainTextRenderer.OnCountDownComplete += HandleCountdownComplete;
 					_mainTextRenderer.StartCountDown();
@@ -61,7 +68,7 @@ namespace CanYouCount
 					break;
 
 				case AppStates.GameOver:
-					_gameOverScreen.ShowScreen();
+					ChangeCurrentScreen(_gameOverScreen);
 
 					break;
 				default:
@@ -75,17 +82,34 @@ namespace CanYouCount
 			_mainTextRenderer.OnCountDownComplete -= HandleCountdownComplete;
 		}
 
+
+		private void InitializeAllScreens()
+		{
+			_mainMenuScreen?.InitializeScreen(_appManager);
+			_inGameScreen?.InitializeScreen(_appManager);
+			_gameOverScreen?.InitializeScreen(_appManager);
+		}
+
 		private void HideAllScreens()
 		{
-			// Hide all screens
 			_mainMenuScreen?.HideScreen();
 			_inGameScreen?.HideScreen();
 			_gameOverScreen?.HideScreen();
 		}
 
-		public void UpdateUI(float deltaTime)
+		private void ChangeCurrentScreen(BaseScreen newScreen)
 		{
+			if (_currentScreen == newScreen)
+			{
+				return;
+			}
 
+			// Hide old screen
+			_currentScreen?.HideScreen();
+
+			// Show new screen
+			_currentScreen = newScreen;
+			_currentScreen?.ShowScreen();
 		}
 	}
 }

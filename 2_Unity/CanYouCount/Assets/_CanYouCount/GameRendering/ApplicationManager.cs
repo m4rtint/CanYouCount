@@ -3,149 +3,153 @@ using UnityEngine;
 
 namespace CanYouCount
 {
-    public enum AppStates
-    {
-        MainMenu,
-        Pregame,
-        Ingame,
-        GameOverAnimation,
-        GameOver,
-    }
+	public enum AppStates
+	{
+		MainMenu,
+		Pregame,
+		Ingame,
+		GameOverAnimation,
+		GameOver,
+	}
 
-    public class ApplicationManager : MonoBehaviour
-    {
-        [Header("Object References")]
-        [SerializeField]
-        private GameRenderer _gameRenderer = null;
-        [SerializeField]
-        private UIManager _uiManager = null;
+	public class ApplicationManager : MonoBehaviour
+	{
+		[Header("Object References")]
+		[SerializeField]
+		private GameRenderer _gameRenderer = null;
+		[SerializeField]
+		private UIManager _uiManager = null;
 
-        [Header("Game Variables")]
-        [SerializeField]
-        private int _visibleTileCount = 25;
+		[Header("Game Variables")]
+		[SerializeField]
+		private int _visibleTileCount = 25;
 
-        [SerializeField]
-        private int _totalTileCount = 50;
+		[SerializeField]
+		private int _totalTileCount = 50;
 
-        [SerializeField]
-        private float _maxGameTimeInSeconds = 300;
+		[SerializeField]
+		private float _maxGameTimeInSeconds = 300;
 
-        public AppStates AppState { get; private set; }
-        public event Action<AppStates> OnAppStateChanged;
+		public AppStates AppState { get; private set; }
+		public event Action<AppStates> OnAppStateChanged;
 
-        private IRandomService _randomService;
-        private Game _game;
+		private IRandomService _randomService;
+		private Game _game;
 
-        public void ChangeState(AppStates newState)
-        {
-            if (AppState == newState)
-            {
-                return;
-            }
+		public Game Game => _game;
 
-            AppState = newState;
-            OnAppStateChanged?.Invoke(AppState);
-        }
+		public void ChangeState(AppStates newState)
+		{
+			if (AppState == newState)
+			{
+				return;
+			}
 
-        private void OnEnable()
-        {
-            try
-            {
-                // Intialize Services
-                _randomService = new SeededRandomService();
+			Debug.Log($"AppState Change: {AppState} => {newState}", this);
 
-                // Initialize Renderer
-                _gameRenderer.Initialize();
+			AppState = newState;
+			OnAppStateChanged?.Invoke(AppState);
+		}
 
-                // Initialize UI
-                _uiManager.Initialize(this);
+		private void OnEnable()
+		{
+			try
+			{
+				// Intialize Services
+				_randomService = new SeededRandomService();
 
-                ChangeState(AppStates.MainMenu);
-                StartNewGame();
-            }
-            catch (Exception ex)
-            {
-                PanicHelper.Panic(ex);
-            }
-        }
+				// Initialize Renderer
+				_gameRenderer.Initialize();
 
-        private void Update()
-        {
-            var deltaTime = Time.deltaTime;
-            try
-            {
-                switch (AppState)
-                {
-                    case AppStates.MainMenu:
-                        break;
-                    case AppStates.Pregame:
-                        break;
-                    case AppStates.Ingame:
-                        _game.UpdateGame(deltaTime);
-                        break;
-                    case AppStates.GameOverAnimation:
-                        break;
-                    case AppStates.GameOver:
-                        break;
-                    default:
-                        break;
-                }
+				// Initialize UI
+				_uiManager.Initialize(this);
 
-                _uiManager.UpdateUI(deltaTime);
-            }
-            catch (Exception ex)
-            {
-                PanicHelper.Panic(ex);
-            }
-        }
+				ChangeState(AppStates.MainMenu);
+				StartNewGame();
+			}
+			catch (Exception ex)
+			{
+				PanicHelper.Panic(ex);
+			}
+		}
 
-        private void OnDisable()
-        {
-            try
-            {
-                _gameRenderer.Cleanup();
-                _uiManager.Cleanup();
-            }
-            catch (Exception ex)
-            {
-                PanicHelper.Panic(ex);
-            }
-        }
+		private void Update()
+		{
+			var deltaTime = Time.deltaTime;
+			try
+			{
+				switch (AppState)
+				{
+					case AppStates.MainMenu:
+						break;
+					case AppStates.Pregame:
+						break;
+					case AppStates.Ingame:
+						_game.UpdateGame(deltaTime);
+						break;
+					case AppStates.GameOverAnimation:
+						break;
+					case AppStates.GameOver:
+						break;
+					default:
+						break;
+				}
 
-        private void StartNewGame()
-        {
-            if (_game != null)
-            {
-                CleanupGame();
-            }
+				_uiManager.UpdateUI(deltaTime);
+			}
+			catch (Exception ex)
+			{
+				PanicHelper.Panic(ex);
+			}
+		}
 
-            _game = new Game(_randomService, _visibleTileCount, _totalTileCount, TimeSpan.FromSeconds(_maxGameTimeInSeconds));
-            _game.OnGameOver += HandleGameOver;
+		private void OnDisable()
+		{
+			try
+			{
+				_gameRenderer.Cleanup();
+				_uiManager.Cleanup();
+			}
+			catch (Exception ex)
+			{
+				PanicHelper.Panic(ex);
+			}
+		}
 
-            // Create the renderers
-            _gameRenderer.SetGame(_game);
+		private void StartNewGame()
+		{
+			if (_game != null)
+			{
+				CleanupGame();
+			}
 
-            // Change state to pregame
-            ChangeState(AppStates.Pregame);
-        }
+			_game = new Game(_randomService, _visibleTileCount, _totalTileCount, TimeSpan.FromSeconds(_maxGameTimeInSeconds));
+			_game.OnGameOver += HandleGameOver;
 
-        private void CleanupGame()
-        {
-            if (_game == null)
-            {
-                return;
-            }
+			// Create the renderers
+			_gameRenderer.SetGame(_game);
 
-            // Unsubscribe from events
-            _game.OnGameOver -= HandleGameOver;
+			// Change state to pregame
+			ChangeState(AppStates.Pregame);
+		}
 
-            _game = null;
-        }
+		private void CleanupGame()
+		{
+			if (_game == null)
+			{
+				return;
+			}
 
-        private void HandleGameOver(GameOverInfo gameOverInfo)
-        {
-            Debug.Log($"GameOver [{(gameOverInfo.IsSuccess ? "SUCCESS" : "FAIL")}]: {gameOverInfo.Time} seconds");
-            StartNewGame();
-        }
-    }
+			// Unsubscribe from events
+			_game.OnGameOver -= HandleGameOver;
+
+			_game = null;
+		}
+
+		private void HandleGameOver(GameOverInfo gameOverInfo)
+		{
+			Debug.Log($"GameOver [{(gameOverInfo.IsSuccess ? "SUCCESS" : "FAIL")}]: {gameOverInfo.Time} seconds");
+			ChangeState(AppStates.GameOverAnimation);
+		}
+	}
 }

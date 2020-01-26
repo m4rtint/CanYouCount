@@ -53,6 +53,11 @@ namespace CanYouCount
 		/// <value>The visible tiles.</value>
 		public Tile[] VisibleTiles => _visibleTiles;
 
+		/// <summary>
+		/// True if the game is over
+		/// </summary>
+		public bool IsGameOver => _isGameOver;
+
 		public float Timer => _timer;
 		private bool _isGameOver;
 
@@ -91,6 +96,10 @@ namespace CanYouCount
 		{
 			if (tappedTile.TileValue == _expectedValue)
 			{
+				_expectedValue++;
+
+				CheckForGameOver();
+
 				Tile swapTile = CorrectTileTapped(tappedTile);
 				OnCorrectTileTapped?.Invoke(tappedTile, swapTile);
 			}
@@ -112,28 +121,7 @@ namespace CanYouCount
 			}
 
 			_timer += deltaTime;
-			// Check for GameOver: Out of Time
-			if (_timer >= _maxGameTime.TotalSeconds)
-			{
-				_isGameOver = true;
-				OnGameOver?.Invoke(new GameOverInfo()
-				{
-					IsSuccess = false,
-					Time = (float)_maxGameTime.TotalSeconds
-				});
-			}
-
-			// Check for win
-			if (_totalTiles.Count < 1 && AreAllVisibleTilesBlank())
-			{
-				// GameOver: Success
-				_isGameOver = true;
-				OnGameOver?.Invoke(new GameOverInfo()
-				{
-					IsSuccess = true,
-					Time = _timer
-				});
-			}
+			CheckForGameOver();
 		}
 
 		private bool AreAllVisibleTilesBlank()
@@ -170,8 +158,6 @@ namespace CanYouCount
 
 		private Tile CorrectTileTapped(Tile tappedTile)
 		{
-			_expectedValue++;
-
 			for (int i = 0; i < _visibleTiles.Length; i++)
 			{
 				if (_visibleTiles[i].Equals(tappedTile))
@@ -181,7 +167,7 @@ namespace CanYouCount
 				}
 			}
 
-			return new Tile();
+			return Tile.BlankTile;
 		}
 
 		private Queue<Tile> PlaceIntoQueue(Tile[] tiles)
@@ -266,6 +252,32 @@ namespace CanYouCount
 			else
 			{
 				return new Tile();
+			}
+		}
+
+		private void CheckForGameOver()
+		{
+			// Check for GameOver: Out of Time
+			if (_timer >= _maxGameTime.TotalSeconds)
+			{
+				_isGameOver = true;
+				OnGameOver?.Invoke(new GameOverInfo()
+				{
+					IsSuccess = false,
+					Time = (float)_maxGameTime.TotalSeconds
+				});
+			}
+
+			// Check for win
+			if (_totalTiles.Count < 1 && AreAllVisibleTilesBlank())
+			{
+				// GameOver: Success
+				_isGameOver = true;
+				OnGameOver?.Invoke(new GameOverInfo()
+				{
+					IsSuccess = true,
+					Time = _timer
+				});
 			}
 		}
 	}
