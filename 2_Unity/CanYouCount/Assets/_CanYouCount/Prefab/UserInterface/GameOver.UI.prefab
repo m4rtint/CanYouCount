@@ -868,6 +868,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _animationTime: 0.5
-  _timeScoreText: {fileID: 0}
-  _menuButton: {fileID: 0}
-  _retryButton: {fileID: 0}
+  _timeScoreText: {fileID: 1112480339}
+  _menuButton: {fileID: 1071226907}
+  _retryButton: {fileID: 1717395191}

@@ -18,12 +18,19 @@ namespace CanYouCount
         public override void InitializeScreen(ApplicationManager appManager)
         {
             base.InitializeScreen(appManager);
+            SetupButtons();
+        }
 
+        public override void ShowScreen()
+        {
+            base.ShowScreen();
+            _timeScoreText.text = string.Format(GameUIContent.TwoDecimalPoint, _applicationManager.Game.Timer);
         }
 
         private void SetupButtons()
         {
-            //_menuButton.onClick.AddListener(() => _applicationManager.)
+            _menuButton.onClick.AddListener(() => _applicationManager.ChangeState(AppStates.MainMenu));
+            _retryButton.onClick.AddListener(() => _applicationManager.StartNewGame());
         }
     }
 }
