@@ -1,33 +1,53 @@
 ﻿using CanYouCount.ObjectPooling;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace CanYouCount
 {
-	public class TileRenderer : BasicUnityPoolable
+	public class TileRenderer : BasicUnityPoolable, IPointerDownHandler
 	{
 		[SerializeField]
 		private TMP_Text _tileValueText = null;
 
 		[SerializeField]
+		private SpriteRenderer _tileBorder = null;
+		[SerializeField]
 		private SpriteRenderer _tileBackground = null;
 
-		public void SetTile(Tile tile)
+		private Tile _tile;
+		private Game _game;
+
+		public void SetTile(Game game, Tile tile)
 		{
+			_tile = tile;
+			_game = game;
+
 			if (!tile.TileValue.HasValue)
 			{
 				// Tile is Blank Tile
-				_tileBackground.enabled = false;
-				_tileValueText.enabled = false;
+				SetEnabled(false);
 			}
 			else
 			{
 				// Tile has value
-				_tileBackground.enabled = true;
-				_tileValueText.enabled = true;
+				SetEnabled(true);
 
 				_tileValueText.text = tile.TileValue.Value.ToString();
 			}
+		}
+
+		private void SetEnabled(bool state)
+		{
+			_tileBackground.enabled = state;
+			_tileBorder.enabled = state;
+			_tileValueText.enabled = state;
+		}
+
+		public void OnPointerDown(PointerEventData eventData)
+		{
+			_tileBackground.color = Color.green;
+			_game.OnTileTapped(_tile);
 		}
 	}
 }

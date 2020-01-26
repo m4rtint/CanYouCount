@@ -56,7 +56,7 @@ namespace CanYouCount
 			for (int i = 0; i < game.VisibleTileCount; i++)
 			{
 				var tileRenderer = _tileRendererObjectPool.GetObjectFromPool(this.transform);
-				tileRenderer.SetTile(game.VisibleTiles[i]);
+				tileRenderer.SetTile(game, game.VisibleTiles[i]);
 				_visibleTileRenderers.Add(tileRenderer);
 			}
 

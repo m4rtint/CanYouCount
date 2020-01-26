@@ -17,7 +17,8 @@ namespace CanYouCount
 		private int _totalTileCount = 50;
 
 		private IRandomService _randomService;
-		private Game _game;
+
+		public Game Game { get; private set; }
 
 		private void OnEnable()
 		{
@@ -44,15 +45,15 @@ namespace CanYouCount
 
 		private void Update()
 		{
-			_game.UpdateGame(Time.deltaTime);
+			Game.UpdateGame(Time.deltaTime);
 		}
 
 		private void StartNewGame()
 		{
-			_game = new Game(_randomService, _visibleTileCount, _totalTileCount);
+			Game = new Game(_randomService, _visibleTileCount, _totalTileCount);
 
 			// Create the renderers
-			_gameRenderer.SetGame(_game);
+			_gameRenderer.SetGame(Game);
 		}
 	}
 }
