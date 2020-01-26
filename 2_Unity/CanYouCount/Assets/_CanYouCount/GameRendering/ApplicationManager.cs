@@ -35,9 +35,6 @@ namespace CanYouCount
 				_gameRenderer.Initialize();
 
 				StartNewGame();
-
-				// Initialize User Interface
-				_userInterfaceManager.Initialize(_game);
 			}
 			catch (Exception ex)
 			{
@@ -68,6 +65,9 @@ namespace CanYouCount
 
 			// Create the renderers
 			_gameRenderer.SetGame(_game);
+
+			// Initialize User Interface
+			_userInterfaceManager.Initialize(_game);
 		}
 	}
 }
