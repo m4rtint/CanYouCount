@@ -133,6 +133,8 @@ namespace CanYouCount
 				swapTileCount++;
 			}
 
+            int swappedTileIndex = 1;
+
 			// Arrange
 			var game = SetupGameForTesting();
 			game.OnWrongTileTapped += HandleWrongTile;
@@ -149,7 +151,7 @@ namespace CanYouCount
 			// Assert
 			Assert.AreEqual(0, wrongTileCount,
 				$"Expected the {nameof(game.OnWrongTileTapped)} event to not be called, but was called {wrongTileCount} times");
-			Assert.AreEqual(1, swapTileCount,
+			Assert.AreEqual(swappedTileIndex, swapTileCount,
 				$"Expected the {nameof(game.OnCorrectTileTapped)} event to be called onces, but was called {swapTileCount} times");
 
 
@@ -158,7 +160,7 @@ namespace CanYouCount
 				$"Expected value arrays to differ by one value at index {expectedTileIndex}");
 
 			// change value at index in the original array and compare again
-			originalValueOrder[expectedTileIndex] = game.VisibleTileCount + 1;
+			updatedValueOrder[expectedTileIndex] = swappedTileIndex;
 			Assert.AreEqual(updatedValueOrder, originalValueOrder,
 				$"Expected value arrays to not differ after updating value at index {expectedTileIndex}");
 		}
