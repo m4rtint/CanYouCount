@@ -18,19 +18,12 @@ namespace CanYouCount
 
 		public virtual void HideScreen()
 		{
-			transform.LeanScale(Vector3.one * 2, _animationTime)
-				  .setEase(LeanTweenType.easeOutBack)
-				  .setOnComplete(() =>
-				  {
-					  gameObject.SetActive(false);
-				  });
+			ScaleAnimation(false);
 		}
 
 		public virtual void ShowScreen()
 		{
-			gameObject.SetActive(true);
-			transform.localScale = Vector3.zero;
-			ScaleAnimation(Vector3.one);
+			ScaleAnimation(true);
 		}
 
 		public virtual void UpdateScreen(float deltaTime)
@@ -38,10 +31,15 @@ namespace CanYouCount
 
 		}
 
-		private void ScaleAnimation(Vector3 scale)
+		private void ScaleAnimation(bool open)
 		{
+			Vector3 scale = open ? Vector3.one : Vector3.zero;
 			transform.LeanScale(scale, _animationTime)
-				  .setEase(LeanTweenType.easeOutBack);
+						.setEase(LeanTweenType.easeOutBack)
+						.setOnComplete(() =>
+						{
+							gameObject.SetActive(open);
+						});
 		}
 	}
 }
