@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UnityEditor;
 
 namespace CanYouCount
 {
@@ -46,7 +47,7 @@ namespace CanYouCount
         public Game(IRandomService service, int visible, int totalNumber)
         {
             _randomValueGenerator = service;
-            Tile[] allTiles = SetupTotalTiles(totalNumber);
+            Tile[] allTiles = SetupTotalTiles(totalNumber, visible);
             _totalTiles = PlaceIntoQueue(allTiles);
             SetupVisibleTiles(visible);
         }
@@ -79,7 +80,7 @@ namespace CanYouCount
             return _totalTiles;
         }
 
-        private Tile[] SetupTotalTiles(int totalNumber) 
+        private Tile[] SetupTotalTiles(int totalNumber, int visible) 
         {
             Tile[] allTiles = new Tile[totalNumber];
             for (int i = 0; i < totalNumber; i++)
@@ -87,7 +88,7 @@ namespace CanYouCount
                 allTiles[i] = new Tile(i + 1);
             }
 
-            allTiles = RandomizeAllTiles(allTiles);
+            allTiles = RandomizeAllTiles(allTiles, visible);
 
             return allTiles;
         }
@@ -101,18 +102,43 @@ namespace CanYouCount
             }
         }
 
-        private Tile[] RandomizeAllTiles(Tile[] tiles)
+        private Tile[] RandomizeAllTiles(Tile[] tiles, int visible)
         {
-            int length = tiles.Length - 1;
-            for (int i = length; i > 0; i--)
+            int amount = AmountOfTimesToShuffle(tiles.Length, visible);
+            int lowerLimit = 0;
+            int upperLimit = 0;
+
+            for (int i = 0; i < amount; i++)
             {
-                int randomInt = _randomValueGenerator.RandInt(0, i);
+                lowerLimit = i * visible;
+                upperLimit = Math.Min((i + 1) * visible, tiles.Length - 1);
+                RandomizeTiles(tiles, lowerLimit, upperLimit);
+            }
+
+            return tiles;
+        }
+
+        private int AmountOfTimesToShuffle(int totalTiles, int visible)
+        { 
+            int amount = totalTiles / visible;
+            if (totalTiles % visible != 0)
+            {
+                amount++;
+            }
+
+            return amount;
+        }
+
+        private void RandomizeTiles(Tile[] tiles, int from, int to)
+        {
+            for (int i = to; i > from; i--)
+            {
+                int randomInt = _randomValueGenerator.RandInt(from, i);
+                
                 Tile randomTile = tiles[randomInt];
                 tiles[randomInt] = tiles[i];
                 tiles[i] = randomTile;
             }
-
-            return tiles;
         }
     }
 }
