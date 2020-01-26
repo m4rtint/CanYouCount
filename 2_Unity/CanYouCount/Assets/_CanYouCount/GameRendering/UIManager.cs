@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace CanYouCount
 {
@@ -54,16 +55,12 @@ namespace CanYouCount
 					break;
 
 				case AppStates.Ingame:
-					_inGameScreen.ShowScreen();
-
+					ChangeCurrentScreen(_inGameScreen);
 					break;
 
 				case AppStates.GameOverAnimation:
-					// Play game over animation
-
-					// Change state
-
-					// Hide ingame
+					_mainTextRenderer.OnGameOverComplete += HandleGameOverComplete;
+					_mainTextRenderer.StartGameOver();
 
 					break;
 
@@ -76,12 +73,17 @@ namespace CanYouCount
 			}
 		}
 
-		private void HandleCountdownComplete()
+		private void HandleGameOverComplete()
 		{
-			_appManager.ChangeState(AppStates.Ingame);
-			_mainTextRenderer.OnCountDownComplete -= HandleCountdownComplete;
+			_mainTextRenderer.OnGameOverComplete -= HandleGameOverComplete;
+			_appManager.ChangeState(AppStates.GameOver);
 		}
 
+		private void HandleCountdownComplete()
+		{
+			_mainTextRenderer.OnCountDownComplete -= HandleCountdownComplete;
+			_appManager.ChangeState(AppStates.Ingame);
+		}
 
 		private void InitializeAllScreens()
 		{

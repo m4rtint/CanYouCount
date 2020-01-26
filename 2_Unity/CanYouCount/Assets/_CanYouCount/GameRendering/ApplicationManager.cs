@@ -38,6 +38,10 @@ namespace CanYouCount
 
 		public Game Game => _game;
 
+		/// <summary>
+		/// Changes the application's state to the provided state
+		/// </summary>
+		/// <param name="newState">The newly provided state</param>
 		public void ChangeState(AppStates newState)
 		{
 			if (AppState == newState)
@@ -49,6 +53,26 @@ namespace CanYouCount
 
 			AppState = newState;
 			OnAppStateChanged?.Invoke(AppState);
+		}
+
+		/// <summary>
+		/// Starts a new game and transitions to <see cref="AppStates.Pregame"/>
+		/// </summary>
+		public void StartNewGame()
+		{
+			if (_game != null)
+			{
+				CleanupGame();
+			}
+
+			_game = new Game(_randomService, _visibleTileCount, _totalTileCount, TimeSpan.FromSeconds(_maxGameTimeInSeconds));
+			_game.OnGameOver += HandleGameOver;
+
+			// Create the renderers
+			_gameRenderer.SetGame(_game);
+
+			// Change state to pregame
+			ChangeState(AppStates.Pregame);
 		}
 
 		private void OnEnable()
@@ -114,23 +138,6 @@ namespace CanYouCount
 			{
 				PanicHelper.Panic(ex);
 			}
-		}
-
-		private void StartNewGame()
-		{
-			if (_game != null)
-			{
-				CleanupGame();
-			}
-
-			_game = new Game(_randomService, _visibleTileCount, _totalTileCount, TimeSpan.FromSeconds(_maxGameTimeInSeconds));
-			_game.OnGameOver += HandleGameOver;
-
-			// Create the renderers
-			_gameRenderer.SetGame(_game);
-
-			// Change state to pregame
-			ChangeState(AppStates.Pregame);
 		}
 
 		private void CleanupGame()
