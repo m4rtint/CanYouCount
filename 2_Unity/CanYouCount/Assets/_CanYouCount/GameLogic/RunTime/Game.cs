@@ -15,6 +15,8 @@ namespace CanYouCount
 
 		private Queue<Tile> _totalTiles;
 
+        private float _timer;
+
 		private IRandomService _randomValueGenerator;
 
 		/// <summary>
@@ -38,6 +40,8 @@ namespace CanYouCount
 		/// </summary>
 		/// <value>The visible tiles.</value>
 		public Tile[] VisibleTiles => _visibleTiles;
+
+        public float Timer => _timer;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CanYouCount.Game"/> class.
@@ -74,7 +78,16 @@ namespace CanYouCount
 			}
 		}
 
-		private void CheckBoardArguments(int totalSize, int visibleSize)
+        /// <summary>
+        /// Updates the game.
+        /// </summary>
+        /// <param name="deltaTime">Delta time.</param>
+        public void UpdateGame(float deltaTime)
+        {
+            _timer += deltaTime;
+        }
+
+        private void CheckBoardArguments(int totalSize, int visibleSize)
 		{
 			if (totalSize <= 0)
 			{
@@ -189,10 +202,6 @@ namespace CanYouCount
 			{
 				return new Tile();
 			}
-		}
-
-		public void UpdateGame(float deltaTime)
-		{
 		}
 	}
 }
