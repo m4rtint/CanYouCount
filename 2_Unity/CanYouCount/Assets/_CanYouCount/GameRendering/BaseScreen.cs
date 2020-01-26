@@ -14,7 +14,7 @@ namespace CanYouCount
 		public virtual void InitializeScreen(ApplicationManager appManager)
 		{
 			_applicationManager = appManager;
-            transform.position = Vector3.zero;
+            transform.localPosition = Vector3.zero;
 		}
 
 		public virtual void HideScreen()

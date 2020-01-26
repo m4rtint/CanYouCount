@@ -90,6 +90,8 @@ namespace CanYouCount
 			_mainMenuScreen?.InitializeScreen(_appManager);
 			_inGameScreen?.InitializeScreen(_appManager);
 			_gameOverScreen?.InitializeScreen(_appManager);
+
+			_mainTextRenderer.transform.localPosition = Vector3.zero;
 		}
 
 		private void HideAllScreens()
