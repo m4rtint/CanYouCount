@@ -12,7 +12,7 @@ namespace CanYouCount
 
 		private Tile[] _visibleTiles;
 
-        private List<Tile> _totalTiles;
+        private Queue<Tile> _totalTiles;
 
         private IRandomService _randomValueGenerator;
 
@@ -47,7 +47,6 @@ namespace CanYouCount
         {
             _randomValueGenerator = service;
             SetupTotalTiles(totalNumber);
-            RandomizeAllTiles();
             SetupVisibleTiles(visible);
         }
 
@@ -67,12 +66,29 @@ namespace CanYouCount
             }
         }
 
-        private void SetupTotalTiles(int totalNumber) 
+        private Queue<Tile> PlaceIntoQueue(Tile[] tiles)
         {
+            _totalTiles = new Queue<Tile>();
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                _totalTiles.Enqueue(tiles[i]);
+            }
+
+            return _totalTiles;
+        }
+
+        private Tile[] SetupTotalTiles(int totalNumber) 
+        {
+            Tile[] allTiles = new Tile[totalNumber];
             for (int i = 0; i < totalNumber; i++)
             {
-                _totalTiles[i] = new Tile(i + 1);
+                allTiles[i] = new Tile(i + 1);
             }
+
+            allTiles = RandomizeAllTiles(allTiles);
+
+            return allTiles;
         }
 
         private void SetupVisibleTiles(int numberOfVisibleTiles)
@@ -80,20 +96,22 @@ namespace CanYouCount
             _visibleTiles = new Tile[numberOfVisibleTiles];
             for (int i = 0; i < numberOfVisibleTiles; i++)
             {
-                _visibleTiles[i] = _totalTiles[i];
+                _visibleTiles[i] = _totalTiles.Dequeue();
             }
         }
 
-        private void RandomizeAllTiles()
+        private Tile[] RandomizeAllTiles(Tile[] tiles)
         {
-            int length = _totalTiles.Count - 1;
+            int length = tiles.Length - 1;
             for (int i = length; i > 0; i--)
             {
                 int randomInt = _randomValueGenerator.RandInt(0, i);
-                Tile randomTile = _totalTiles[randomInt];
-                _totalTiles[randomInt] = _totalTiles[i];
-                _totalTiles[i] = randomTile;
+                Tile randomTile = tiles[randomInt];
+                tiles[randomInt] = tiles[i];
+                tiles[i] = randomTile;
             }
+
+            return tiles;
         }
     }
 }
