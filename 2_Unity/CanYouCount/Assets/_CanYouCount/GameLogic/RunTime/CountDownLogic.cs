@@ -3,7 +3,7 @@ namespace CanYouCount
 {
     public class CountDownLogic
     {
-        private int _countDownValue = 2;
+        private int _countDownValue;
         private static string[] _canYouCount = GameUIContent.CanYouCount;
 
         /// <summary>
@@ -11,6 +11,11 @@ namespace CanYouCount
         /// </summary>
         /// <value>The count down value.</value>
         public int CountDownValue => _countDownValue;
+
+        public CountDownLogic()
+        {
+            ResetCountDownValue();
+        }
 
         /// <summary>
         /// Gets the count down text with.
@@ -31,6 +36,11 @@ namespace CanYouCount
         {
             _countDownValue--;
             return _countDownValue;
+        }
+
+        public void ResetCountDownValue()
+        {
+            _countDownValue = 2;
         }
 
     }
