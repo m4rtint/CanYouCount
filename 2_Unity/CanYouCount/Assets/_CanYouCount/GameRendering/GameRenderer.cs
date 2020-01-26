@@ -1,4 +1,5 @@
 ﻿using CanYouCount.ObjectPooling;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -24,6 +25,8 @@ namespace CanYouCount
 		private BasicUnityObjectPool<TileRenderer> _tileRendererObjectPool = null;
 		private List<TileRenderer> _visibleTileRenderers;
 
+		private Game _game;
+
 		public void Initialize()
 		{
 			_tileRendererObjectPool = new BasicUnityObjectPool<TileRenderer>(
@@ -36,7 +39,7 @@ namespace CanYouCount
 				parent: this.transform);
 			_tileRendererObjectPool.PreallocateObjects(10);
 		}
-		
+
 		public void Cleanup()
 		{
 			// Return all renderers to their object pools
@@ -51,6 +54,20 @@ namespace CanYouCount
 
 		public void SetGame(Game game)
 		{
+			if (_game == game)
+			{
+				return; // Game already set
+			}
+
+			if (_game != null)
+			{
+				// Unsubscribe old events
+				UnsubscribeFromGameEvents();
+			}
+
+			// Set the new game
+			_game = game;
+
 			// Create visible tiles
 			_visibleTileRenderers = new List<TileRenderer>(game.VisibleTileCount);
 			for (int i = 0; i < game.VisibleTileCount; i++)
@@ -68,8 +85,23 @@ namespace CanYouCount
 			_camera.transform.localPosition = new Vector3(camX, camY, -10);
 			_camera.orthographicSize = camSize;
 
+			// Subscribe to game events
+			SubscribeToGameEvents();
+
 			// Layout Tiles
 			LayoutTileRenderers();
+		}
+
+		private void SubscribeToGameEvents()
+		{
+			_game.OnWrongTileTapped += HandleWrongTileTapped;
+			_game.OnCorrectTileTapped += HandleSwapTile;
+		}
+
+		private void UnsubscribeFromGameEvents()
+		{
+			_game.OnWrongTileTapped -= HandleWrongTileTapped;
+			_game.OnCorrectTileTapped -= HandleSwapTile;
 		}
 
 		private void LayoutTileRenderers()
@@ -83,6 +115,31 @@ namespace CanYouCount
 
 				renderer.transform.localPosition = new Vector3(x, y, 0);
 			}
+		}
+
+		private TileRenderer GetVisibleTileRendererForTile(Tile tile)
+		{
+			for (int i = 0; i < _visibleTileRenderers.Count; i++)
+			{
+				var tileRenderer = _visibleTileRenderers[i];
+				if (tileRenderer.Tile.Equals(tile))
+				{
+					return tileRenderer;
+				}
+			}
+
+			return null;
+		}
+
+		private void HandleSwapTile(Tile arg1, Tile arg2)
+		{
+		}
+
+		private void HandleWrongTileTapped(Tile wrongTile)
+		{
+			// Find the correct renderer
+			var wrongTileRenderer = GetVisibleTileRendererForTile(wrongTile);
+			wrongTileRenderer?.PerformIncorrectTapAnimation();
 		}
 	}
 }

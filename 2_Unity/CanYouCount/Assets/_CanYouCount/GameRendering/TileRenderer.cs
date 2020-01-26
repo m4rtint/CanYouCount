@@ -15,6 +15,7 @@ namespace CanYouCount
 		[SerializeField]
 		private SpriteRenderer _tileBackground = null;
 
+		public Tile Tile => _tile;
 		private Tile _tile;
 		private Game _game;
 
@@ -35,8 +36,7 @@ namespace CanYouCount
 
 				_tileValueText.text = tile.TileValue.Value.ToString();
 
-				//PerformShowAnimation();
-				PerformIncorrectTapAnimation();
+				PerformShowAnimation();
 			}
 		}
 
