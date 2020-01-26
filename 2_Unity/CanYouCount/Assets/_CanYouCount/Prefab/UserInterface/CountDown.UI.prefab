@@ -203,11 +203,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4437714920648591076}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aadc9f9c7e9134635b3d0ace80a1861d, type: 3}
+  m_Script: {fileID: 11500000, guid: 41c570645a5af4e0da18d840803c2f08, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _timeTakenToAnimate: 1
-  _countDownText: {fileID: 4437714920209178933}
+  _mainScreenText: {fileID: 0}
 --- !u!225 &5777366723614055226
 CanvasGroup:
   m_ObjectHideFlags: 0

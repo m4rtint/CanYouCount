@@ -5,7 +5,7 @@ using TMPro;
 namespace CanYouCount
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class MainScreenTextRenderer : MonoBehaviour
+    public class GameCenterTextDisplay : MonoBehaviour
     {
         /// <summary>
         /// The on count down complete.
@@ -22,7 +22,7 @@ namespace CanYouCount
         [SerializeField]
         private TMP_Text _mainScreenText = null;
         private CanvasGroup _canvasGroup = null;
-        private MainScreenTextLogic _mainScreenTextLogic = null;
+        private CountDownLogic _logic = null;
 
 
         /// <summary>
@@ -66,12 +66,12 @@ namespace CanYouCount
         private void AnimateCountDown()
         {
             Reset();
-            SetMainScreenText(_mainScreenTextLogic.GetCountDownText());
+            SetMainScreenText(_logic.GetCountDownText());
             var seq = LeanTween.sequence();
 
             var scaleDescr = transform.LeanScale(Vector3.one, _timeTakenToAnimate).setEaseOutBack();
             seq.append(scaleDescr);
-            if (_mainScreenTextLogic.CountDownValue == 0)
+            if (_logic.CountDownValue == 0)
             {
                 seq.append(LeanTween.alphaCanvas(_canvasGroup, 0, _timeTakenToAnimate / 2));
             }
@@ -81,7 +81,7 @@ namespace CanYouCount
 
         private void OnAnimationComplete()
         {
-            if (_mainScreenTextLogic.DecrementCountDown() >= 0)
+            if (_logic.DecrementCountDown() >= 0)
             {
                 AnimateCountDown();
             }
@@ -101,7 +101,7 @@ namespace CanYouCount
         {
             SetupText();
             SetupCanvasGroup();
-            _mainScreenTextLogic = new MainScreenTextLogic();
+            _logic = new CountDownLogic();
         }
 
         private void SetupCanvasGroup()

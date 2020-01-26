@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 namespace CanYouCount
 {
-    public class MainScreenTextLogic
+    public class CountDownLogic
     {
         private int _countDownValue = 2;
         private static string[] _canYouCount = GameUIContent.CanYouCount;

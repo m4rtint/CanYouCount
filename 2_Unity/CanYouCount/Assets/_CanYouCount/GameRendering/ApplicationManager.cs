@@ -8,6 +8,7 @@ namespace CanYouCount
         MainMenu,
         Pregame,
         Ingame,
+        GameOverAnimation,
         GameOver,
     }
 
@@ -17,9 +18,9 @@ namespace CanYouCount
         [SerializeField]
         private GameRenderer _gameRenderer = null;
         [SerializeField]
-        private CYC_UIManager _uiManager = null;
+        private UIManager _uiManager = null;
         [SerializeField]
-        private UIManager _userInterfaceManager = null;
+        private InGameScreen _inGameScreen = null;
 
         [Header("Game Variables")]
         [SerializeField]
@@ -37,7 +38,7 @@ namespace CanYouCount
         private IRandomService _randomService;
         private Game _game;
 
-        public void GotoState(AppStates newState)
+        public void ChangeState(AppStates newState)
         {
             if (AppState == newState)
             {
@@ -61,7 +62,7 @@ namespace CanYouCount
                 // Initialize UI
                 _uiManager.Initialize(this);
 
-                GotoState(AppStates.MainMenu);
+                ChangeState(AppStates.MainMenu);
                 StartNewGame();
             }
             catch (Exception ex)
@@ -80,10 +81,12 @@ namespace CanYouCount
                     case AppStates.MainMenu:
                         break;
                     case AppStates.Pregame:
-                        _userInterfaceManager.StartCountDown();
+                        _inGameScreen.StartCountDown();
                         break;
                     case AppStates.Ingame:
                         _game.UpdateGame(deltaTime);
+                        break;
+                    case AppStates.GameOverAnimation:
                         break;
                     case AppStates.GameOver:
                         break;
@@ -105,7 +108,7 @@ namespace CanYouCount
             {
                 _gameRenderer.Cleanup();
                 _uiManager.Cleanup();
-                _userInterfaceManager.CleanUp();
+                _inGameScreen.CleanUp();
             }
             catch (Exception ex)
             {
@@ -127,11 +130,10 @@ namespace CanYouCount
             _gameRenderer.SetGame(_game);
 
             // Initialize User Interface
-            _userInterfaceManager.Initialize(_game);
-            _game.OnGameOver += _userInterfaceManager.StartGameOver;
+            _inGameScreen.Initialize(_game);
 
             // Change state to pregame
-            GotoState(AppStates.Pregame);
+            ChangeState(AppStates.Pregame);
         }
 
         private void CleanupGame()
@@ -143,7 +145,6 @@ namespace CanYouCount
 
             // Unsubscribe from events
             _game.OnGameOver -= HandleGameOver;
-            _game.OnGameOver -= _userInterfaceManager.StartGameOver;
 
             _game = null;
         }

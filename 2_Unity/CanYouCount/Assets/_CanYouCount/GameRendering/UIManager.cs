@@ -1,99 +1,81 @@
-﻿using TMPro;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace CanYouCount
 {
-	public class UIManager : MonoBehaviour
+	public class
+		UIManager : MonoBehaviour
 	{
-		[Header("Prefab")]
+		[Header("UI Screens")]
 		[SerializeField]
-		private GameObject _countDownPrefab;
-
-		[Header("Text To Update")]
+		private BaseScreen _mainMenuScreen = null;
 		[SerializeField]
-		private TMP_Text _timerText = null;
+		private BaseScreen _inGameScreen = null;
 		[SerializeField]
-		private TMP_Text _nextTileText = null;
+		private BaseScreen _gameOverScreen = null;
 
-		private Game _game = null;
-		private MainScreenTextRenderer _overworldScreenRenderer = null;
+		[SerializeField]
+		private GameCenterTextDisplay _mainTextRenderer = null;
 
-		/// <summary>
-		/// Initialize the specified game.
-		/// </summary>
-		/// <param name="game">Game.</param>
-		public void Initialize(Game game)
+		private ApplicationManager _appManager;
+
+		public void Initialize(ApplicationManager appManager)
 		{
-			CleanUp();
-			_game = game;
-			_game.OnCorrectTileTapped += _game_OnCorrectTileTapped;
-			SetUpCountDown();
+			_appManager = appManager;
+			_appManager.OnAppStateChanged += HandleAppStateChanged;
 		}
 
-		/// <summary>
-		/// Updates the user interface.
-		/// </summary>
-		public void UpdateUI()
+		public void Cleanup()
 		{
-			_timerText.text = string.Format(GameUIContent.TwoDecimalPoint, _game?.Timer);
+			_appManager.OnAppStateChanged -= HandleAppStateChanged;
 		}
 
-		/// <summary>
-		/// Cleans up.
-		/// </summary>
-		public void CleanUp()
+		private void HandleAppStateChanged(AppStates newState)
 		{
-			if (_overworldScreenRenderer == null)
+			switch (newState)
 			{
-				return;
+				case AppStates.MainMenu:
+					break;
+
+				case AppStates.Pregame:
+					_inGameScreen.ShowScreen();
+
+					_mainTextRenderer.OnCountDownComplete += HandleCountdownComplete;
+					_mainTextRenderer.StartCountDown();
+
+					break;
+
+				case AppStates.Ingame:
+					_inGameScreen.ShowScreen();
+
+					break;
+
+				case AppStates.GameOverAnimation:
+					// Play game over animation
+
+					// Change state
+
+					// Hide ingame
+
+					break;
+
+				case AppStates.GameOver:
+					_gameOverScreen.ShowScreen();
+
+					break;
+				default:
+					break;
 			}
-
-			SetNextUI(0);
-			SetTimeUI(0);
-			Destroy(_overworldScreenRenderer);
 		}
 
-        /// <summary>
-        /// Starts the count down.
-        /// </summary>
-        public void StartCountDown()
-        {
-            _overworldScreenRenderer.StartCountDown();
-        }
-
-        /// <summary>
-        /// Starts the game over.
-        /// </summary>
-        public void StartGameOver(GameOverInfo info)
-        {
-            _overworldScreenRenderer.StartGameOver();
-        }
-
-        private void SetUpCountDown()
+		private void HandleCountdownComplete()
 		{
-			GameObject countDownObj = Instantiate(_countDownPrefab, transform.parent);
-			_overworldScreenRenderer = countDownObj.GetComponent<MainScreenTextRenderer>();
-			if (_overworldScreenRenderer == null)
-			{
-				_overworldScreenRenderer = countDownObj.AddComponent<MainScreenTextRenderer>();
-			}
-
-			_overworldScreenRenderer.StartGameOver();
+			_appManager.ChangeState(AppStates.Ingame);
+			_mainTextRenderer.OnCountDownComplete -= HandleCountdownComplete;
 		}
 
-		private void SetTimeUI(float time)
+		public void UpdateUI(float deltaTime)
 		{
-			_timerText.text = string.Format(GameUIContent.TwoDecimalPoint, time);
-		}
 
-		private void SetNextUI(int value)
-		{
-			_nextTileText.text = value.ToString();
-		}
-
-		private void _game_OnCorrectTileTapped(Tile originalTile, Tile arg2)
-		{
-			SetNextUI(originalTile.TileValue ?? 0 + 1);
 		}
 	}
 }
