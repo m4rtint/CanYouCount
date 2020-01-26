@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace CanYouCount
 {
@@ -11,7 +12,7 @@ namespace CanYouCount
 
 		private Tile[] _visibleTiles;
 
-        private Tile[] _totalTiles;
+        private List<Tile> _totalTiles;
 
         private IRandomService _randomValueGenerator;
 
@@ -68,7 +69,6 @@ namespace CanYouCount
 
         private void SetupTotalTiles(int totalNumber) 
         {
-            _totalTiles = new Tile[totalNumber];
             for (int i = 0; i < totalNumber; i++)
             {
                 _totalTiles[i] = new Tile(i + 1);
@@ -86,7 +86,7 @@ namespace CanYouCount
 
         private void RandomizeAllTiles()
         {
-            int length = _totalTiles.Length - 1;
+            int length = _totalTiles.Count - 1;
             for (int i = length; i > 0; i--)
             {
                 int randomInt = _randomValueGenerator.RandInt(0, i);
