@@ -42,7 +42,7 @@ namespace CanYouCount
 				}
 			}
 
-			return null;
+			throw new Exception("Could not find tile by value");
 		}
 
 		private static Tile FindTileByPredicate(Game game, Func<Tile, bool> predicate)
@@ -55,7 +55,7 @@ namespace CanYouCount
 				}
 			}
 
-			return null;
+			throw new Exception("Could not find tile by predicate");
 		}
 
 		private static int[] GetVisibleTileValues(Game game)
