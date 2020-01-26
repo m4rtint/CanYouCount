@@ -24,6 +24,7 @@ namespace CanYouCount
 
 		public virtual void ShowScreen(bool isInstant = false)
 		{
+			gameObject.SetActive(true);
 			ScaleAnimation(true);
 		}
 

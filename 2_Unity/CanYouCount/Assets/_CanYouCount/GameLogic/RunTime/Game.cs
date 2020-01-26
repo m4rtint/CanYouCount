@@ -66,6 +66,8 @@ namespace CanYouCount
 		public float Timer => _timer;
 		private bool _isGameOver;
 
+		private float _lastCorrectTapTime;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CanYouCount.Game"/> class.
 		/// </summary>
