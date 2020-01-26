@@ -44,9 +44,10 @@ namespace CanYouCount
 			for (int i = 1; i <= EXPECTED_NUM_VISIBLE; i++)
 			{
 				// Try and get the desired tile
-				var tile = GetVisibleTileByValue(game, i);
-				Assert.Fail($"Expected Game.VisibleTiles to contain the numbers [1 to {EXPECTED_NUM_VISIBLE}], but didn't find [{i}]");
-
+				Assert.DoesNotThrow(() =>
+				{
+					GetVisibleTileByValue(game, i);
+				}, $"Expected to be able to find a visible tile with value [{i}], but could not");
 			}
 		}
 
