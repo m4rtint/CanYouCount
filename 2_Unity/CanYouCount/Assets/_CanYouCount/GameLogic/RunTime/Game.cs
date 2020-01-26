@@ -134,10 +134,10 @@ namespace CanYouCount
             for (int i = to; i > from; i--)
             {
                 int randomInt = _randomValueGenerator.RandInt(from, i);
-                
+
                 Tile randomTile = tiles[randomInt];
-                tiles[randomInt] = tiles[i];
-                tiles[i] = randomTile;
+                tiles[randomInt] = tiles[from];
+                tiles[from] = randomTile;
             }
         }
     }
