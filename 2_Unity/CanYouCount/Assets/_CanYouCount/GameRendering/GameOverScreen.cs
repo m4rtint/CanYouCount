@@ -15,12 +15,19 @@ namespace CanYouCount
         [SerializeField]
         private Button _retryButton;
 
+        /// <summary>
+        /// Initializes the screen.
+        /// </summary>
+        /// <param name="appManager">App manager.</param>
         public override void InitializeScreen(ApplicationManager appManager)
         {
             base.InitializeScreen(appManager);
             SetupButtons();
         }
 
+        /// <summary>
+        /// Shows the screen.
+        /// </summary>
         public override void ShowScreen()
         {
             base.ShowScreen();
