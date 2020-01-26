@@ -37,8 +37,10 @@ namespace CanYouCount
 			var game = new Game(random, EXPECTED_NUM_VISIBLE, EXPECTED_TOTAL_NUM);
 
 			// Assert
-			Assert.AreEqual(EXPECTED_NUM_VISIBLE, game.VisibleTileCount);
-			Assert.AreEqual(EXPECTED_NUM_VISIBLE, game.VisibleTiles.Length);
+			Assert.AreEqual(EXPECTED_NUM_VISIBLE, game.VisibleTileCount,
+				$"Expected visible tile count to be set to {EXPECTED_NUM_VISIBLE}");
+			Assert.AreEqual(EXPECTED_NUM_VISIBLE, game.VisibleTiles.Length,
+				$"Expected the number of visible tiles to be {EXPECTED_NUM_VISIBLE}");
 
 			// Check to ensure the numbers visible are (1 to n)
 			for (int i = 1; i <= EXPECTED_NUM_VISIBLE; i++)
@@ -78,8 +80,10 @@ namespace CanYouCount
 			game.OnTileTapped(nonExpectedTile);
 
 			// Assert
-			Assert.AreEqual(1, wrongTileCount);
-			Assert.AreEqual(0, swapTileCount);
+			Assert.AreEqual(1, wrongTileCount,
+				$"Expected the {nameof(game.OnWrongTileTapped)} event to be called once, but was called {wrongTileCount} times");
+			Assert.AreEqual(0, swapTileCount,
+				$"Expected the {nameof(game.OnCorrectTileTapped)} event to not be called, but was called {swapTileCount} times");
 		}
 
 		[Test]
@@ -111,15 +115,20 @@ namespace CanYouCount
 			game.OnTileTapped(expectedTile);
 
 			// Assert
-			Assert.AreEqual(0, wrongTileCount);
-			Assert.AreEqual(1, swapTileCount);
+			Assert.AreEqual(0, wrongTileCount,
+				$"Expected the {nameof(game.OnWrongTileTapped)} event to not be called, but was called {wrongTileCount} times");
+			Assert.AreEqual(1, swapTileCount,
+				$"Expected the {nameof(game.OnCorrectTileTapped)} event to be called onces, but was called {swapTileCount} times");
+
 
 			var updatedValueOrder = GetVisibleTileValues(game);
-			Assert.AreNotEqual(originalValueOrder, updatedValueOrder);
+			Assert.AreNotEqual(originalValueOrder, updatedValueOrder,
+				$"Expected value arrays to differ by one value at index {expectedTileIndex}");
 
 			// change value at index in the original array and compare again
 			originalValueOrder[expectedTileIndex] = game.VisibleTileCount + 1;
-			Assert.AreEqual(updatedValueOrder, originalValueOrder);
+			Assert.AreEqual(updatedValueOrder, originalValueOrder,
+				$"Expected value arrays to not differ after updating value at index {expectedTileIndex}");
 		}
 
 		[Test]
@@ -127,7 +136,7 @@ namespace CanYouCount
 		{
 			var game = SetupGameForTesting();
 
-			for (int i = 1; i <= 25; i++)
+			for (int i = 1; i <= TEST_GAME_TOTAL_NUM; i++)
 			{
 				var tile = GetVisibleTileByValue(game, i);
 				game.OnTileTapped(tile);
@@ -153,7 +162,8 @@ namespace CanYouCount
 			game.OnTileTapped(nextTile);
 
 			var blankTile = GetVisibleTilesByValue(game, null);
-			Assert.AreEqual(1, blankTile.Count);
+			Assert.AreEqual(1, blankTile.Count,
+				$"Expected 1 blank tile to appear after removing sufficient tiles");
 		}
 
 		#region Test Helpers
@@ -166,17 +176,17 @@ namespace CanYouCount
 			return game;
 		}
 
-		private static Tile GetVisibleTileByValue(Game game, int? tileVale)
+		private static Tile GetVisibleTileByValue(Game game, int? tileValue)
 		{
 			for (int i = 0; i < game.VisibleTiles.Length; i++)
 			{
-				if (game.VisibleTiles[i].TileValue == tileVale)
+				if (game.VisibleTiles[i].TileValue == tileValue)
 				{
 					return game.VisibleTiles[i];
 				}
 			}
 
-			throw new Exception("Could not find tile by value");
+			throw new Exception($"Could not find visible tile by value: [{tileValue}]");
 		}
 
 		private static List<Tile> GetVisibleTilesByValue(Game game, int? tileVale)
