@@ -397,6 +397,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3844023733657534745, guid: 6c12a5d5baf62d14daff223b760cc986,
+        type: 3}
+      propertyPath: m_UiScaleMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3844023733657534745, guid: 6c12a5d5baf62d14daff223b760cc986,
+        type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 3844023733657534745, guid: 6c12a5d5baf62d14daff223b760cc986,
+        type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 2240
+      objectReference: {fileID: 0}
     - target: {fileID: 3844023733657534747, guid: 6c12a5d5baf62d14daff223b760cc986,
         type: 3}
       propertyPath: m_Name
@@ -512,6 +527,12 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3844023734969005581, guid: 6c12a5d5baf62d14daff223b760cc986,
+        type: 3}
+      propertyPath: _nextTilePrefab
+      value: 
+      objectReference: {fileID: 4271490545898895890, guid: 7ec01cc460d654eaa8e7cdc2ba529bd8,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6c12a5d5baf62d14daff223b760cc986, type: 3}
 --- !u!1001 &6447522925320776697
