@@ -160,6 +160,11 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8385749532198472111, guid: eceb55ec5c8540f4090e83ae7252191e,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 204.85
+      objectReference: {fileID: 0}
     - target: {fileID: 9020853765877685526, guid: eceb55ec5c8540f4090e83ae7252191e,
         type: 3}
       propertyPath: m_Name
