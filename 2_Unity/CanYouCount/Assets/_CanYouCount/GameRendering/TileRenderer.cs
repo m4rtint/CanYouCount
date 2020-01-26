@@ -1,4 +1,5 @@
-﻿using CanYouCount.ObjectPooling;
+﻿using System;
+using CanYouCount.ObjectPooling;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,6 +19,8 @@ namespace CanYouCount
 		public Tile Tile => _tile;
 		private Tile _tile;
 		private Game _game;
+        private const float _showHidinAnimationTime = 0.25f;
+
 
 		public void SetTile(Game game, Tile tile)
 		{
@@ -35,8 +38,6 @@ namespace CanYouCount
 				SetEnabled(true);
 
 				_tileValueText.text = tile.TileValue.Value.ToString();
-
-				PerformShowAnimation();
 			}
 		}
 
@@ -56,6 +57,10 @@ namespace CanYouCount
 		{
 			if (Input.GetKeyDown(KeyCode.K))
 				PerformIncorrectTapAnimation();
+            if (Input.GetKeyDown(KeyCode.S))
+                PerformShowAnimation();
+            if (Input.GetKeyDown(KeyCode.H))
+                PerformHideAnimation();
 		}
 
 		public void PerformIncorrectTapAnimation()
@@ -97,13 +102,17 @@ namespace CanYouCount
 		{
 			transform.localScale = Vector3.zero;
 			var anim = transform
-				.LeanScale(Vector3.one, 0.5f)
-				.setEase(LeanTweenType.easeOutBack);
+				.LeanScale(Vector3.one, _showHidinAnimationTime)
+				.setEase(LeanTweenType.easeOutBack)
+                .setDelay(_showHidinAnimationTime);
 		}
 
-		public void PerformHideAnimation()
+		public void PerformHideAnimation(Action callback = null)
 		{
-
+            float timeTakesToFade = 0.25f;
+            transform.localScale = Vector3.one;
+            transform.LeanScale(Vector3.one + new Vector3(0.5f, 0.5f, 0.5f), _showHidinAnimationTime);
+            LeanTween.alpha(gameObject, 0f, timeTakesToFade).setOnComplete(callback);
 		}
 	}
 }
