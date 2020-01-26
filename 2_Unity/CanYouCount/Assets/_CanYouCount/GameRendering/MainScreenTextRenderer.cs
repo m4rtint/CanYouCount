@@ -7,21 +7,30 @@ namespace CanYouCount
     [RequireComponent(typeof(CanvasGroup))]
     public class MainScreenTextRenderer : MonoBehaviour
     {
+        /// <summary>
+        /// The on count down complete.
+        /// </summary>
         public Action OnCountDownComplete;
+
+        /// <summary>
+        /// The on game over complete.
+        /// </summary>
         public Action OnGameOverComplete;
 
         [SerializeField]
         private float _timeTakenToAnimate = 1f;
         [SerializeField]
-        private TMP_Text _countDownText = null;
+        private TMP_Text _mainScreenText = null;
         private CanvasGroup _canvasGroup = null;
+        private MainScreenTextLogic _mainScreenTextLogic = null;
+
 
         /// <summary>
         /// Shows the count down.
         /// </summary>
-        public void StartCountDownFrom(int value)
+        public void StartCountDown()
         {
-            AnimateCountDown(value);
+            AnimateCountDown();
         }
 
         /// <summary>
@@ -41,10 +50,10 @@ namespace CanYouCount
             _canvasGroup.alpha = 1;
         }
 
-        private void AnimateGameOver() 
+        private void AnimateGameOver()
         {
             Reset();
-            SetCountDownText(GameUIContent.GameOver);
+            SetMainScreenText(GameUIContent.GameOver);
             transform.LeanScale(Vector3.one, _timeTakenToAnimate)
                 .setEase(LeanTweenType.easeOutSine)
                 .setOnComplete(() =>
@@ -54,35 +63,27 @@ namespace CanYouCount
         }
 
 
-        private void AnimateCountDown(int value)
+        private void AnimateCountDown()
         {
             Reset();
+            SetMainScreenText(_mainScreenTextLogic.GetCountDownText());
             var seq = LeanTween.sequence();
 
             var scaleDescr = transform.LeanScale(Vector3.one, _timeTakenToAnimate).setEaseOutBack();
             seq.append(scaleDescr);
-            if (value == 0)
+            if (_mainScreenTextLogic.CountDownValue == 0)
             {
                 seq.append(LeanTween.alphaCanvas(_canvasGroup, 0, _timeTakenToAnimate / 2));
             }
 
-            seq.append(() => OnAnimationComplete(value));
+            seq.append(() => OnAnimationComplete());
         }
 
-        private void OnAnimationComplete(int value)
+        private void OnAnimationComplete()
         {
-            value--;
-            string textToDisplay = value.ToString();
-
-            if (value >= 0)
+            if (_mainScreenTextLogic.DecrementCountDown() >= 0)
             {
-                if (value == 0)
-                {
-                    textToDisplay = GameUIContent.Go;
-                }
-
-                SetCountDownText(textToDisplay);
-                AnimateCountDown(value);
+                AnimateCountDown();
             }
             else
             {
@@ -91,15 +92,16 @@ namespace CanYouCount
             }
         }
 
-        private void SetCountDownText(string text)
+        private void SetMainScreenText(string text)
         {
-            _countDownText.text = text;
+            _mainScreenText.text = text;
         }
 
         private void Awake()
         {
             SetupText();
             SetupCanvasGroup();
+            _mainScreenTextLogic = new MainScreenTextLogic();
         }
 
         private void SetupCanvasGroup()
@@ -113,9 +115,9 @@ namespace CanYouCount
 
         private void SetupText()
         {
-            if (_countDownText == null)
+            if (_mainScreenText == null)
             {
-                _countDownText = GetComponentInChildren<TMP_Text>();
+                _mainScreenText = GetComponentInChildren<TMP_Text>();
             }
         }
     }
