@@ -22,14 +22,17 @@ namespace CanYouCount
 		public Tile Tile => _tile;
 		private Tile _tile;
 		private Game _game;
+        private Color _originalColor = Color.white;
 
 
 		public void SetTile(Game game, Tile tile)
 		{
 			_tile = tile;
 			_game = game;
+            _originalColor = _tileBackground.color;
 
-			if (!tile.TileValue.HasValue)
+
+            if (!tile.TileValue.HasValue)
 			{
 				// Tile is Blank Tile
 				SetEnabled(false);
@@ -67,40 +70,31 @@ namespace CanYouCount
 
 		public void PerformIncorrectTapAnimation()
 		{
-#warning Fix this please :(
-			// Reset state
-			transform.localRotation = Quaternion.identity;
+            // Reset state
+            ResetRotation();
 
-			const float TotalAnimTime = 0.25f;
+            const float TotalAnimTime = 0.25f;
 			const float TimePerAnim = TotalAnimTime / 5f;
 			const float RotationDegree = 20;
-			var tweenSeq = LeanTween.sequence();
-			tweenSeq.append(transform
-				.LeanRotateZ(RotationDegree, TimePerAnim)
-				.setEase(LeanTweenType.easeInSine));
-			tweenSeq.append(transform
-				.LeanRotateZ(-RotationDegree, TimePerAnim)
-				.setEase(LeanTweenType.easeInOutSine));
-			tweenSeq.append(transform
-				.LeanRotateZ(RotationDegree, TimePerAnim)
-				.setEase(LeanTweenType.easeInOutSine));
-			tweenSeq.append(transform
-				.LeanRotateZ(-RotationDegree, TimePerAnim)
-				.setEase(LeanTweenType.easeInOutSine));
-			tweenSeq.append(transform
-				.LeanRotateZ(0, TimePerAnim)
-				.setEase(LeanTweenType.easeOutSine));
-			tweenSeq.append(() => { transform.localRotation = Quaternion.identity; });
+
+            transform
+            .LeanRotateZ(RotationDegree, TimePerAnim)
+            .setLoopPingPong(2)
+            .setOnComplete(() => ResetRotation());
 
 
 			var colorSeq = LeanTween.sequence();
-			var originalColor = _tileBackground.color;
 			colorSeq.append(LeanTween.color(_tileBackground.gameObject, Color.red, TotalAnimTime / 2f));
-			colorSeq.append(LeanTween.color(_tileBackground.gameObject, originalColor, TotalAnimTime / 2f));
-			colorSeq.append(() => { _tileBackground.color = originalColor; });
+			colorSeq.append(LeanTween.color(_tileBackground.gameObject, _originalColor, TotalAnimTime / 2f));
+			colorSeq.append(() => { _tileBackground.color = _originalColor; });
 		}
 
-		public void PerformShowAnimation()
+        private void ResetRotation()
+        {
+            transform.localRotation = Quaternion.identity;
+        }
+
+        public void PerformShowAnimation()
 		{
 			transform.localScale = Vector3.zero;
 			transform
