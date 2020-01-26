@@ -19,8 +19,6 @@ namespace CanYouCount
         private GameRenderer _gameRenderer = null;
         [SerializeField]
         private UIManager _uiManager = null;
-        [SerializeField]
-        private InGameScreen _inGameScreen = null;
 
         [Header("Game Variables")]
         [SerializeField]
@@ -81,7 +79,6 @@ namespace CanYouCount
                     case AppStates.MainMenu:
                         break;
                     case AppStates.Pregame:
-                        _inGameScreen.StartCountDown();
                         break;
                     case AppStates.Ingame:
                         _game.UpdateGame(deltaTime);
@@ -108,7 +105,6 @@ namespace CanYouCount
             {
                 _gameRenderer.Cleanup();
                 _uiManager.Cleanup();
-                _inGameScreen.CleanUp();
             }
             catch (Exception ex)
             {
@@ -128,9 +124,6 @@ namespace CanYouCount
 
             // Create the renderers
             _gameRenderer.SetGame(_game);
-
-            // Initialize User Interface
-            _inGameScreen.Initialize(_game);
 
             // Change state to pregame
             ChangeState(AppStates.Pregame);

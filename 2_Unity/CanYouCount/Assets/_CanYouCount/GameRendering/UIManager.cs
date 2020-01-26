@@ -22,6 +22,8 @@ namespace CanYouCount
 		{
 			_appManager = appManager;
 			_appManager.OnAppStateChanged += HandleAppStateChanged;
+
+			HideAllScreens();
 		}
 
 		public void Cleanup()
@@ -71,6 +73,14 @@ namespace CanYouCount
 		{
 			_appManager.ChangeState(AppStates.Ingame);
 			_mainTextRenderer.OnCountDownComplete -= HandleCountdownComplete;
+		}
+
+		private void HideAllScreens()
+		{
+			// Hide all screens
+			_mainMenuScreen?.HideScreen();
+			_inGameScreen?.HideScreen();
+			_gameOverScreen?.HideScreen();
 		}
 
 		public void UpdateUI(float deltaTime)
