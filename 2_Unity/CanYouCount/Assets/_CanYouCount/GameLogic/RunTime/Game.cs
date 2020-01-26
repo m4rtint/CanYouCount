@@ -46,7 +46,8 @@ namespace CanYouCount
         public Game(IRandomService service, int visible, int totalNumber)
         {
             _randomValueGenerator = service;
-            SetupTotalTiles(totalNumber);
+            Tile[] allTiles = SetupTotalTiles(totalNumber);
+            _totalTiles = PlaceIntoQueue(allTiles);
             SetupVisibleTiles(visible);
         }
 
