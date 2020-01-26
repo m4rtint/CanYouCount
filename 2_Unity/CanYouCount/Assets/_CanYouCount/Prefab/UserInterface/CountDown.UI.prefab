@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _timeTakenToAnimate: 1
-  _mainScreenText: {fileID: 0}
+  _mainScreenText: {fileID: 4437714920209178933}
 --- !u!225 &5777366723614055226
 CanvasGroup:
   m_ObjectHideFlags: 0

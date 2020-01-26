@@ -30,6 +30,7 @@ namespace CanYouCount
 		/// </summary>
 		public void StartCountDown()
 		{
+            _logic.ResetCountDownValue();
 			AnimateCountDown();
 		}
 

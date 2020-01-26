@@ -36,6 +36,8 @@ namespace CanYouCount
 
         private void SetupButtons()
         {
+            _menuButton.onClick.RemoveAllListeners();
+            _retryButton.onClick.RemoveAllListeners();
             _menuButton.onClick.AddListener(() => _applicationManager.ChangeState(AppStates.MainMenu));
             _retryButton.onClick.AddListener(() => _applicationManager.StartNewGame());
         }
