@@ -37,6 +37,16 @@ namespace CanYouCount
 			}
 		}
 
+		private void OnDisable()
+		{
+			_gameRenderer.Cleanup();
+		}
+
+		private void Update()
+		{
+			_game.UpdateGame(Time.deltaTime);
+		}
+
 		private void StartNewGame()
 		{
 			_game = new Game(_randomService, _visibleTileCount, _totalTileCount);

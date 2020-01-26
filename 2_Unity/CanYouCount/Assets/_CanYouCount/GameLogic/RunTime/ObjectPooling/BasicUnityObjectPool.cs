@@ -70,5 +70,10 @@ namespace CanYouCount.ObjectPooling
 			// Add it to the list
 			_poolables.Enqueue(poolable);
 		}
+		
+		public void Dispose()
+		{
+			GameObject.Destroy(_poolableContainer.gameObject);
+		}
 	}
 }
