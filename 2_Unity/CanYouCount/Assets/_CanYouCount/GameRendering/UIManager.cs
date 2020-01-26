@@ -16,6 +16,7 @@ namespace CanYouCount
 		private TMP_Text _nextTileText = null;
 
 		private Game _game = null;
+        private CountDownRenderer _countDownManager = null;
 
 		/// <summary>
 		/// Initialize the specified game.
@@ -23,10 +24,10 @@ namespace CanYouCount
 		/// <param name="game">Game.</param>
 		public void Initialize(Game game)
 		{
-			_game = game;
+            CleanUp();
+            _game = game;
 			_game.OnCorrectTileTapped += _game_OnCorrectTileTapped;
             SetUpCountDown();
-            CleanUp();
         }
 
 		/// <summary>
@@ -35,18 +36,6 @@ namespace CanYouCount
 		public void UpdateUI()
 		{
 			_timerText.text = string.Format(GameUIContent.TwoDecimalPoint, _game?.Timer);
-		}
-
-        private void SetUpCountDown()
-        {
-            GameObject countDownObj = Instantiate(_countDownPrefab, transform.parent);
-            CountDownTimer cdTimer = countDownObj.GetComponent<CountDownTimer>();
-            if (cdTimer == null)
-            {
-                cdTimer = countDownObj.AddComponent<CountDownTimer>();
-            }
-
-            cdTimer.StartCountDownFrom(3);
         }
 
         /// <summary>
@@ -54,8 +43,26 @@ namespace CanYouCount
         /// </summary>
         public void CleanUp()
         {
+            if (_countDownManager == null) 
+            { 
+                return; 
+            }
+
             SetNextUI(0);
             SetTimeUI(0);
+            Destroy(_countDownManager);
+        }
+
+        private void SetUpCountDown()
+        {
+            GameObject countDownObj = Instantiate(_countDownPrefab, transform.parent);
+            _countDownManager = countDownObj.GetComponent<CountDownRenderer>();
+            if (_countDownManager == null)
+            {
+                _countDownManager = countDownObj.AddComponent<CountDownRenderer>();
+            }
+
+            _countDownManager.StartCountDownFrom(3);
         }
 
         private void SetTimeUI(float time)
