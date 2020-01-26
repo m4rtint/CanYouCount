@@ -25,6 +25,7 @@ namespace CanYouCount
 
 		private const int TEST_GAME_NUM_VISIBLE = 5;
 		private const int TEST_GAME_TOTAL_NUM = 25;
+		private static TimeSpan TEST_GAME_MAX_TIME = TimeSpan.FromSeconds(TEST_GAME_TOTAL_NUM * 2);
 
 		[Test]
 		public void Test_GameConstructor_Initial()
@@ -32,9 +33,10 @@ namespace CanYouCount
 			// Arrange/Act
 			const int EXPECTED_NUM_VISIBLE = 5;
 			const int EXPECTED_TOTAL_NUM = 25;
+			TimeSpan EXPECTED_MAX_GAME_TIME = TimeSpan.FromSeconds(3);
 
 			var random = new SeededRandomService();
-			var game = new Game(random, EXPECTED_NUM_VISIBLE, EXPECTED_TOTAL_NUM);
+			var game = new Game(random, EXPECTED_NUM_VISIBLE, EXPECTED_TOTAL_NUM, EXPECTED_MAX_GAME_TIME);
 
 			// Assert
 			Assert.AreEqual(EXPECTED_NUM_VISIBLE, game.VisibleTileCount,
@@ -64,25 +66,29 @@ namespace CanYouCount
 				{
 					if (totalSize <= 0)
 					{
-						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize),
+						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize, TimeSpan.FromSeconds(1)),
 							"Should not be able to create a game with total size <= 0");
 					}
 					else if (visibleSize <= 0)
 					{
-						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize),
+						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize, TimeSpan.FromSeconds(1)),
 							"Should not be able to create a game with more visible size <= 0");
 					}
 					else if (visibleSize > totalSize)
 					{
-						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize),
+						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize, TimeSpan.FromSeconds(1)),
 							"Should not be able to create a game with more visible tiles than total tiles");
 					}
 					else
 					{
-						Assert.DoesNotThrow(() => new Game(random, visibleSize, totalSize),
+						Assert.DoesNotThrow(() => new Game(random, visibleSize, totalSize, TimeSpan.FromSeconds(1)),
 							$"Should be able to create a Game with visible size [{visibleSize}] and total size [{totalSize}]");
 					}
 				}
+
+			// Ensure Max Game Time <= 0 throws an error
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Game(random, TEST_GAME_NUM_VISIBLE, TEST_GAME_TOTAL_NUM, TimeSpan.FromSeconds(0)));
+			Assert.Throws<ArgumentOutOfRangeException>(() => new Game(random, TEST_GAME_NUM_VISIBLE, TEST_GAME_TOTAL_NUM, TimeSpan.FromSeconds(-1)));
 		}
 
 		[Test]
@@ -133,7 +139,7 @@ namespace CanYouCount
 				swapTileCount++;
 			}
 
-            int swappedTileIndex = 1;
+			int swappedTileIndex = 1;
 
 			// Arrange
 			var game = SetupGameForTesting();
@@ -168,15 +174,45 @@ namespace CanYouCount
 		[Test]
 		public void Test_Game_FullRun()
 		{
+			int gameOverHandlerCalls = 0;
+
 			var game = SetupGameForTesting();
+			game.OnGameOver += (GameOverInfo gameOverInfo) =>
+			{
+				gameOverHandlerCalls++;
+				Assert.True(gameOverInfo.IsSuccess);
+				Assert.AreEqual(TEST_GAME_TOTAL_NUM, gameOverInfo.Time);
+			};
 
 			for (int i = 1; i <= TEST_GAME_TOTAL_NUM; i++)
 			{
 				var tile = GetVisibleTileByValue(game, i);
 				game.OnTileTapped(tile);
+				game.UpdateGame(1); // Update the game by one second for each tile tapped
 			}
 
-			// TODO: Assert game is complete
+			Assert.AreEqual(1, gameOverHandlerCalls, $"GameOverHandler should have been called once, but was called {gameOverHandlerCalls} times");
+		}
+
+		[Test]
+		public void Test_Game_RunOutOfTime()
+		{
+			int gameOverHandlerCalls = 0;
+
+			var game = SetupGameForTesting();
+			game.OnGameOver += (GameOverInfo gameOverInfo) =>
+			{
+				gameOverHandlerCalls++;
+				Assert.False(gameOverInfo.IsSuccess);
+				Assert.AreEqual(TEST_GAME_MAX_TIME.TotalSeconds, gameOverInfo.Time);
+			};
+
+			for (int i = 1; i <= TEST_GAME_MAX_TIME.TotalSeconds; i++)
+			{
+				game.UpdateGame(2); // Update the game by one second for each tile tapped
+			}
+
+			Assert.AreEqual(1, gameOverHandlerCalls, $"GameOverHandler should have been called once, but was called {gameOverHandlerCalls} times");
 		}
 
 		[Test]
@@ -205,7 +241,7 @@ namespace CanYouCount
 		private Game SetupGameForTesting()
 		{
 			var random = new SeededRandomService();
-			var game = new Game(random, TEST_GAME_NUM_VISIBLE, TEST_GAME_TOTAL_NUM);
+			var game = new Game(random, TEST_GAME_NUM_VISIBLE, TEST_GAME_TOTAL_NUM, TEST_GAME_MAX_TIME);
 
 			return game;
 		}

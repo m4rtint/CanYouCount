@@ -4,6 +4,12 @@ using UnityEditor;
 
 namespace CanYouCount
 {
+	public struct GameOverInfo
+	{
+		public bool IsSuccess;
+		public float Time;
+	}
+
 	public class Game
 	{
 
@@ -11,11 +17,13 @@ namespace CanYouCount
 
 		private int _expectedValue;
 
+		private TimeSpan _maxGameTime;
+
 		private Tile[] _visibleTiles;
 
 		private Queue<Tile> _totalTiles;
 
-        private float _timer;
+		private float _timer;
 
 		private IRandomService _randomValueGenerator;
 
@@ -30,6 +38,11 @@ namespace CanYouCount
 		public event Action<Tile, Tile> OnCorrectTileTapped;
 
 		/// <summary>
+		/// Occurs when the game is over (either all tiles are tapped, or time is up)
+		/// </summary>
+		public event Action<GameOverInfo> OnGameOver;
+
+		/// <summary>
 		/// Gets the visible tile count.
 		/// </summary>
 		/// <value>The visible tile count.</value>
@@ -41,20 +54,30 @@ namespace CanYouCount
 		/// <value>The visible tiles.</value>
 		public Tile[] VisibleTiles => _visibleTiles;
 
-        public float Timer => _timer;
+		public float Timer => _timer;
+		private bool _isGameOver;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CanYouCount.Game"/> class.
 		/// </summary>
+		/// <param name="rngService">The random number service</param>
 		/// <param name="visible">Visible.</param>
 		/// <param name="totalNumber">Total number.</param>
-		public Game(IRandomService service, int visible, int totalNumber)
+		/// <param name="maxGameTime">The maximum time the game can run for, before failing</param>
+		public Game(IRandomService rngService, int visible, int totalNumber, TimeSpan maxGameTime)
 		{
 
 			CheckBoardArguments(totalNumber, visible);
+			if (maxGameTime.TotalSeconds <= 0)
+			{
+				throw new ArgumentOutOfRangeException(nameof(maxGameTime));
+			}
 
+			_timer = 0;
+			_isGameOver = false;
 
-			_randomValueGenerator = service;
+			_maxGameTime = maxGameTime;
+			_randomValueGenerator = rngService;
 			Tile[] allTiles = SetupTotalTiles(totalNumber, visible);
 			_expectedValue = 1;
 			_totalTiles = PlaceIntoQueue(allTiles);
@@ -78,16 +101,57 @@ namespace CanYouCount
 			}
 		}
 
-        /// <summary>
-        /// Updates the game.
-        /// </summary>
-        /// <param name="deltaTime">Delta time.</param>
-        public void UpdateGame(float deltaTime)
-        {
-            _timer += deltaTime;
-        }
+		/// <summary>
+		/// Updates the game.
+		/// </summary>
+		/// <param name="deltaTime">Delta time.</param>
+		public void UpdateGame(float deltaTime)
+		{
+			if (_isGameOver)
+			{
+				return;
+			}
 
-        private void CheckBoardArguments(int totalSize, int visibleSize)
+			_timer += deltaTime;
+			// Check for GameOver: Out of Time
+			if (_timer >= _maxGameTime.TotalSeconds)
+			{
+				_isGameOver = true;
+				OnGameOver?.Invoke(new GameOverInfo()
+				{
+					IsSuccess = false,
+					Time = (float)_maxGameTime.TotalSeconds
+				});
+			}
+
+			// Check for win
+			if (_totalTiles.Count < 1 && AreAllVisibleTilesBlank())
+			{
+				// GameOver: Success
+				_isGameOver = true;
+				OnGameOver?.Invoke(new GameOverInfo()
+				{
+					IsSuccess = true,
+					Time = _timer
+				});
+			}
+		}
+
+		private bool AreAllVisibleTilesBlank()
+		{
+			for (int i = 0; i < _visibleTiles.Length; i++)
+			{
+				var visibleTile = _visibleTiles[i];
+				if (visibleTile.TileValue.HasValue)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		private void CheckBoardArguments(int totalSize, int visibleSize)
 		{
 			if (totalSize <= 0)
 			{
@@ -114,11 +178,11 @@ namespace CanYouCount
 				if (_visibleTiles[i].Equals(tappedTile))
 				{
 					_visibleTiles[i] = GetNextTileValue();
-                    return _visibleTiles[i];
+					return _visibleTiles[i];
 				}
 			}
 
-            return new Tile();
+			return new Tile();
 		}
 
 		private Queue<Tile> PlaceIntoQueue(Tile[] tiles)

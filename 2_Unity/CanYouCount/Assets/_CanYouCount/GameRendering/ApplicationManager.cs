@@ -18,6 +18,9 @@ namespace CanYouCount
 		[SerializeField]
 		private int _totalTileCount = 50;
 
+		[SerializeField]
+		private float _maxGameTimeInSeconds = 300;
+
 		private IRandomService _randomService;
 		public Game _game;
 
@@ -56,7 +59,7 @@ namespace CanYouCount
 
 		private void StartNewGame()
 		{
-			_game = new Game(_randomService, _visibleTileCount, _totalTileCount);
+			_game = new Game(_randomService, _visibleTileCount, _totalTileCount, TimeSpan.FromSeconds(_maxGameTimeInSeconds));
 
 			// Create the renderers
 			_gameRenderer.SetGame(_game);
