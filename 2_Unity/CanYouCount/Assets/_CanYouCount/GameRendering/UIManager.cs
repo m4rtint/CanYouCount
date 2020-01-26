@@ -35,6 +35,15 @@ namespace CanYouCount
             _timerText.text = string.Format(GameUIContent.TwoDecimalPoint, _game?.Timer);
         }
 
+        /// <summary>
+        /// Cleans up.
+        /// </summary>
+        public void CleanUp()
+        {
+            Destroy(_timerText.gameObject);
+            Destroy(_nextTileText.gameObject);
+        }
+
         private void SetupNextTileUI()
         {
             GameObject _nextTileObj = Instantiate<GameObject>(_nextTilePrefab, transform.parent);
