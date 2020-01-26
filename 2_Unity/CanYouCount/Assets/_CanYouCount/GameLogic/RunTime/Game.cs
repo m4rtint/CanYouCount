@@ -9,7 +9,7 @@ namespace CanYouCount
 
         private int _totalTileCount;
 
-		private Tile _expectedTile;
+		private int _expectedValue;
 
 		private Tile[] _visibleTiles;
 
@@ -46,8 +46,13 @@ namespace CanYouCount
         /// <param name="totalNumber">Total number.</param>
         public Game(IRandomService service, int visible, int totalNumber)
         {
+        
+            CheckBoardArguments(totalNumber, visible);
+           
+
             _randomValueGenerator = service;
             Tile[] allTiles = SetupTotalTiles(totalNumber, visible);
+            _expectedValue = 1;
             _totalTiles = PlaceIntoQueue(allTiles);
             SetupVisibleTiles(visible);
         }
@@ -58,14 +63,47 @@ namespace CanYouCount
         /// <param name="tappedTile">Tapped tile.</param>
         public void OnTileTapped(Tile tappedTile)
         {
-            if (tappedTile.TileValue == _expectedTile.TileValue)
+            if (tappedTile.TileValue == _expectedValue)
             {
+                CorrectTileTapped(tappedTile);
                 OnCorrectTileTapped?.Invoke(tappedTile, tappedTile);
             }
             else
             {
                 OnWrongTileTapped?.Invoke(tappedTile);
             }
+        }
+
+        private void CheckBoardArguments(int totalSize, int visibleSize)
+        {
+            if (totalSize <= 0)
+            {
+                throw new System.Exception("Total Size too small < 0 - Get your shit together");
+            }
+
+            if (visibleSize <= 0)
+            {
+                throw new System.Exception("Visible Size too small < 0 - Get it together");
+            }
+
+            if (visibleSize > totalSize)
+            {
+                throw new System.Exception("Visible Size > Total Size - Come on now");
+            }
+        }
+
+        private void CorrectTileTapped(Tile tappedTile)
+        {
+            _expectedValue++;
+
+            for(int i = 0; i < _visibleTiles.Length; i++)
+            {
+                if (_visibleTiles[i].Equals(tappedTile))
+                {
+                    _visibleTiles[i] = GetNextTileValue();
+                }
+            }
+
         }
 
         private Queue<Tile> PlaceIntoQueue(Tile[] tiles)
@@ -138,6 +176,18 @@ namespace CanYouCount
                 Tile randomTile = tiles[randomInt];
                 tiles[randomInt] = tiles[from];
                 tiles[from] = randomTile;
+            }
+        }
+
+        private Tile GetNextTileValue()
+        {
+            if (_totalTiles.Count > 0) 
+            {
+                return _totalTiles.Dequeue(); 
+            }
+            else
+            {
+                return new Tile();
             }
         }
     }

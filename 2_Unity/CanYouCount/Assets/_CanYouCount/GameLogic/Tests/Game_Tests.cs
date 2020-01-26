@@ -72,10 +72,10 @@ namespace CanYouCount
 						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize),
 							"Should not be able to create a game with more visible size <= 0");
 					}
-					else if (visibleSize < totalSize)
+					else if (visibleSize > totalSize)
 					{
-						Assert.DoesNotThrow(() => new Game(random, visibleSize, totalSize),
-							"Should be able to create a game with more visible tiles than total tiles");
+						Assert.Throws<Exception>(() => new Game(random, visibleSize, totalSize),
+							"Should not be able to create a game with more visible tiles than total tiles");
 					}
 					else
 					{
