@@ -53,7 +53,23 @@ namespace CanYouCount
 			Destroy(_overworldScreenRenderer);
 		}
 
-		private void SetUpCountDown()
+        /// <summary>
+        /// Starts the count down.
+        /// </summary>
+        public void StartCountDown()
+        {
+            _overworldScreenRenderer.StartCountDown();
+        }
+
+        /// <summary>
+        /// Starts the game over.
+        /// </summary>
+        public void StartGameOver(GameOverInfo info)
+        {
+            _overworldScreenRenderer.StartGameOver();
+        }
+
+        private void SetUpCountDown()
 		{
 			GameObject countDownObj = Instantiate(_countDownPrefab, transform.parent);
 			_overworldScreenRenderer = countDownObj.GetComponent<MainScreenTextRenderer>();
