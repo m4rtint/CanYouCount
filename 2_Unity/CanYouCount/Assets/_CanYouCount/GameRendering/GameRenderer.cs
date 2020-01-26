@@ -74,6 +74,7 @@ namespace CanYouCount
 			{
 				var tileRenderer = _tileRendererObjectPool.GetObjectFromPool(this.transform);
 				tileRenderer.SetTile(game, game.VisibleTiles[i]);
+				tileRenderer.PerformShowAnimation();
 				_visibleTileRenderers.Add(tileRenderer);
 			}
 
@@ -119,20 +120,49 @@ namespace CanYouCount
 
 		private TileRenderer GetVisibleTileRendererForTile(Tile tile)
 		{
+			var index = GetVisibleTileRendererIndexForTile(tile);
+			return index == -1 ? null : _visibleTileRenderers[index];
+		}
+
+		private int GetVisibleTileRendererIndexForTile(Tile tile)
+		{
 			for (int i = 0; i < _visibleTileRenderers.Count; i++)
 			{
 				var tileRenderer = _visibleTileRenderers[i];
 				if (tileRenderer.Tile.Equals(tile))
 				{
-					return tileRenderer;
+					return i;
 				}
 			}
 
-			return null;
+			return -1;
 		}
 
-		private void HandleSwapTile(Tile arg1, Tile arg2)
+		private void HandleSwapTile(Tile oldTile, Tile newTile)
 		{
+			// Get the old tile renderer
+			var tileRendererIndex = GetVisibleTileRendererIndexForTile(oldTile);
+			var oldTileRenderer = _visibleTileRenderers[tileRendererIndex];
+			if (oldTileRenderer == null)
+			{
+				// Act confused, but ultimately do nothing
+				Debug.LogError($"Was expecting to have an active {nameof(TileRenderer)} for tile [{oldTile.TileValue}] but didn't find any");
+			}
+
+			// Get a new tile renderer
+			var newTileRenderer = _tileRendererObjectPool.GetObjectFromPool();
+			newTileRenderer.SetTile(_game, newTile);
+
+			// Perform swap
+			_visibleTileRenderers[tileRendererIndex] = newTileRenderer;
+			LayoutTileRenderers();
+
+			// Perfom animations
+			newTileRenderer.PerformShowAnimation();
+			oldTileRenderer.PerformHideAnimation(() =>
+			{
+				_tileRendererObjectPool.ReturnObjectToPool(oldTileRenderer);
+			});
 		}
 
 		private void HandleWrongTileTapped(Tile wrongTile)
