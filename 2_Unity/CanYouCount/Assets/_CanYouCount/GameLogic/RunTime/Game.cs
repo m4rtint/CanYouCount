@@ -69,8 +69,8 @@ namespace CanYouCount
 		{
 			if (tappedTile.TileValue == _expectedValue)
 			{
-				CorrectTileTapped(tappedTile);
-				OnCorrectTileTapped?.Invoke(tappedTile, tappedTile);
+				Tile swapTile = CorrectTileTapped(tappedTile);
+				OnCorrectTileTapped?.Invoke(tappedTile, swapTile);
 			}
 			else
 			{
@@ -105,7 +105,7 @@ namespace CanYouCount
 			}
 		}
 
-		private void CorrectTileTapped(Tile tappedTile)
+		private Tile CorrectTileTapped(Tile tappedTile)
 		{
 			_expectedValue++;
 
@@ -114,9 +114,11 @@ namespace CanYouCount
 				if (_visibleTiles[i].Equals(tappedTile))
 				{
 					_visibleTiles[i] = GetNextTileValue();
+                    return _visibleTiles[i];
 				}
 			}
 
+            return new Tile();
 		}
 
 		private Queue<Tile> PlaceIntoQueue(Tile[] tiles)

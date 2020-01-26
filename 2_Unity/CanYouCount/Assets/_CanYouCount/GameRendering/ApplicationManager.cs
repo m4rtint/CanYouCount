@@ -45,6 +45,7 @@ namespace CanYouCount
 		private void OnDisable()
 		{
 			_gameRenderer.Cleanup();
+            _userInterfaceManager.CleanUp();
 		}
 
 		private void Update()

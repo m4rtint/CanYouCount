@@ -43,3 +43,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85113f12298684e0e997a3538b595db7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _timerPrefab: {fileID: 1068494370002490637, guid: 7dcd6e21ef508451ca1b33fdf9cfc3ce,
+    type: 3}
+  _nextTilePrefab: {fileID: 4271490545898895890, guid: 7ec01cc460d654eaa8e7cdc2ba529bd8,
+    type: 3}
