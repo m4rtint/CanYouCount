@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CanYouCount
+﻿namespace CanYouCount
 {
     public static class GameUIContent
     {
@@ -10,11 +8,13 @@ namespace CanYouCount
         /// <value>The two decimal point.</value>
         public static string TwoDecimalPoint => "{0:0.##}";
 
-        /// <summary>
-        /// Gets the go text.
-        /// </summary>
-        /// <value>The go.</value>
-        public static string Go => "GO";
+        private static string Can => "CAN";
+
+        private static string You => "YOU";
+
+        private static string Count => "COUNT";
+
+        public static string[] CanYouCount = new string[] { GameUIContent.Count, GameUIContent.You, GameUIContent.Can };
 
         public static string GameOver => "<size=50%>GAME OVER";
     }
