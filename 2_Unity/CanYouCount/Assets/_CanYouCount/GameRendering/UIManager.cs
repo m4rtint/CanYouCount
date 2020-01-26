@@ -5,6 +5,10 @@ namespace CanYouCount
 {
 	public class UIManager : MonoBehaviour
 	{
+        [Header("Prefab")]
+        [SerializeField]
+        private GameObject _countDownPrefab;
+
 		[Header("Text To Update")]
 		[SerializeField]
 		private TMP_Text _timerText = null;
@@ -21,6 +25,7 @@ namespace CanYouCount
 		{
 			_game = game;
 			_game.OnCorrectTileTapped += _game_OnCorrectTileTapped;
+            SetUpCountDown();
             CleanUp();
         }
 
@@ -32,10 +37,22 @@ namespace CanYouCount
 			_timerText.text = string.Format(GameUIContent.TwoDecimalPoint, _game?.Timer);
 		}
 
-		/// <summary>
-		/// Cleans up.
-		/// </summary>
-		public void CleanUp()
+        private void SetUpCountDown()
+        {
+            GameObject countDownObj = Instantiate(_countDownPrefab, transform.parent);
+            CountDownTimer cdTimer = countDownObj.GetComponent<CountDownTimer>();
+            if (cdTimer == null)
+            {
+                cdTimer = countDownObj.AddComponent<CountDownTimer>();
+            }
+
+            cdTimer.StartCountDownFrom(3);
+        }
+
+        /// <summary>
+        /// Cleans up.
+        /// </summary>
+        public void CleanUp()
         {
             SetNextUI(0);
             SetTimeUI(0);
