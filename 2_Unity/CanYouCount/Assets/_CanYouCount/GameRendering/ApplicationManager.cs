@@ -17,6 +17,8 @@ namespace CanYouCount
 		[SerializeField]
 		private GameRenderer _gameRenderer = null;
 		[SerializeField]
+		private CYC_UIManager _uiManager = null;
+		[SerializeField]
 		private UIManager _userInterfaceManager = null;
 
 		[Header("Game Variables")]
@@ -30,13 +32,20 @@ namespace CanYouCount
 		private float _maxGameTimeInSeconds = 300;
 
 		public AppStates AppState { get; private set; }
+		public event Action<AppStates> OnAppStateChanged;
 
 		private IRandomService _randomService;
 		private Game _game;
 
 		public void GotoState(AppStates newState)
 		{
+			if (AppState == newState)
+			{
+				return;
+			}
+
 			AppState = newState;
+			OnAppStateChanged?.Invoke(AppState);
 		}
 
 		private void OnEnable()
@@ -46,8 +55,11 @@ namespace CanYouCount
 				// Intialize Services
 				_randomService = new SeededRandomService();
 
-				// Initialize Renderers
+				// Initialize Renderer
 				_gameRenderer.Initialize();
+
+				// Initialize UI
+				_uiManager.Initialize(this);
 
 				GotoState(AppStates.MainMenu);
 				StartNewGame();
@@ -58,30 +70,46 @@ namespace CanYouCount
 			}
 		}
 
-		private void OnDisable()
-		{
-			_gameRenderer.Cleanup();
-			_userInterfaceManager.CleanUp();
-		}
-
 		private void Update()
 		{
-			switch (AppState)
+			var deltaTime = Time.deltaTime;
+			try
 			{
-				case AppStates.MainMenu:
-					break;
-				case AppStates.Pregame:
-					break;
-				case AppStates.Ingame:
-					_game.UpdateGame(Time.deltaTime);
-					break;
-				case AppStates.GameOver:
-					break;
-				default:
-					break;
-			}
+				switch (AppState)
+				{
+					case AppStates.MainMenu:
+						break;
+					case AppStates.Pregame:
+						break;
+					case AppStates.Ingame:
+						_game.UpdateGame(deltaTime);
+						break;
+					case AppStates.GameOver:
+						break;
+					default:
+						break;
+				}
 
-			_userInterfaceManager.UpdateUI();
+				_uiManager.UpdateUI(deltaTime);
+			}
+			catch (Exception ex)
+			{
+				PanicHelper.Panic(ex);
+			}
+		}
+
+		private void OnDisable()
+		{
+			try
+			{
+				_gameRenderer.Cleanup();
+				_uiManager.Cleanup();
+				_userInterfaceManager.CleanUp();
+			}
+			catch (Exception ex)
+			{
+				PanicHelper.Panic(ex);
+			}
 		}
 
 		private void StartNewGame()
