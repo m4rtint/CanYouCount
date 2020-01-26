@@ -58,6 +58,11 @@ namespace CanYouCount
 		/// </summary>
 		public bool IsGameOver => _isGameOver;
 
+		/// <summary>
+		/// The value the game is expecting for the next <see cref="Tile"/>
+		/// </summary>
+		public int ExpectedValue => _expectedValue;
+
 		public float Timer => _timer;
 		private bool _isGameOver;
 
@@ -84,6 +89,7 @@ namespace CanYouCount
 			_randomValueGenerator = rngService;
 			Tile[] allTiles = SetupTotalTiles(totalNumber, visible);
 			_expectedValue = 1;
+			_totalTileCount = totalNumber;
 			_totalTiles = PlaceIntoQueue(allTiles);
 			SetupVisibleTiles(visible);
 		}
@@ -96,7 +102,7 @@ namespace CanYouCount
 		{
 			if (tappedTile.TileValue == _expectedValue)
 			{
-				_expectedValue++;
+				_expectedValue = Math.Min(_expectedValue + 1, _totalTileCount);
 
 				CheckForGameOver();
 
@@ -233,14 +239,25 @@ namespace CanYouCount
 
 		private void RandomizeTiles(Tile[] tiles, int from, int to)
 		{
-			for (int i = to; i > from; i--)
+			int timesToSwap = to - from;
+			for (int i = 0; i < timesToSwap; i++)
 			{
-				int randomInt = _randomValueGenerator.RandInt(from, i);
+				int i1 = _randomValueGenerator.RandInt(from, to);
+				int i2 = _randomValueGenerator.RandInt(from, to);
 
-				Tile randomTile = tiles[randomInt];
-				tiles[randomInt] = tiles[from];
-				tiles[from] = randomTile;
+				Tile randomTile = tiles[i1];
+				tiles[i1] = tiles[i2];
+				tiles[i2] = randomTile;
 			}
+
+			//for (int i = to; i > from; i--)
+			//{
+			//	int randomInt = _randomValueGenerator.RandInt(from, i);
+
+			//	Tile randomTile = tiles[randomInt];
+			//	tiles[randomInt] = tiles[from];
+			//	tiles[from] = randomTile;
+			//}
 		}
 
 		private Tile GetNextTileValue()

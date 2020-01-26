@@ -57,10 +57,7 @@ namespace CanYouCount
 
 		private void OnCorrectTileTapped(Tile tappedTile, Tile swappedTile)
 		{
-			if (!_game?.IsGameOver ?? true) // If the game exists and is not over
-			{
-				SetNextUI((tappedTile.TileValue ?? 0) + 1);
-			}
+			SetNextUI(_game?.ExpectedValue ?? 0);
 		}
 	}
 }
