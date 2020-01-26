@@ -8,7 +8,10 @@ namespace CanYouCount
 {
 	public class TileRenderer : BasicUnityPoolable, IPointerDownHandler
 	{
-		[SerializeField]
+        private const float _showHidinAnimationTime = 0.25f;
+        private Vector3 scaleOutSize = new Vector3(1.5f, 1.5f, 1.5f);
+
+        [SerializeField]
 		private TMP_Text _tileValueText = null;
 
 		[SerializeField]
@@ -19,7 +22,6 @@ namespace CanYouCount
 		public Tile Tile => _tile;
 		private Tile _tile;
 		private Game _game;
-        private const float _showHidinAnimationTime = 0.25f;
 
 
 		public void SetTile(Game game, Tile tile)
@@ -101,18 +103,18 @@ namespace CanYouCount
 		public void PerformShowAnimation()
 		{
 			transform.localScale = Vector3.zero;
-			var anim = transform
+			transform
 				.LeanScale(Vector3.one, _showHidinAnimationTime)
 				.setEase(LeanTweenType.easeOutBack)
                 .setDelay(_showHidinAnimationTime);
+            LeanTween.alpha(gameObject, 1f, _showHidinAnimationTime);
 		}
 
 		public void PerformHideAnimation(Action callback = null)
 		{
-            float timeTakesToFade = 0.25f;
             transform.localScale = Vector3.one;
-            transform.LeanScale(Vector3.one + new Vector3(0.5f, 0.5f, 0.5f), _showHidinAnimationTime);
-            LeanTween.alpha(gameObject, 0f, timeTakesToFade).setOnComplete(callback);
+            transform.LeanScale(scaleOutSize, _showHidinAnimationTime);
+            LeanTween.alpha(gameObject, 0f, _showHidinAnimationTime).setOnComplete(callback);
 		}
 	}
 }
