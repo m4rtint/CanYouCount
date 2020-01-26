@@ -50,30 +50,10 @@ namespace CanYouCount
 			Destroy(_timerText.gameObject);
 			Destroy(_nextTileText.gameObject);
 		}
-        private void SetupNextTileUI()
-        {
-            GameObject _nextTileObj = Instantiate<GameObject>(_nextTilePrefab, transform.parent);
-            _nextTileText = _nextTileObj.GetComponentInChildren<TMP_Text>();
-            if (_nextTileText == null)
-            {
-                _nextTileObj.AddComponent<TMP_Text>();
-            }
-        }
-
-        private void SetupTimerUI()
-        {
-            GameObject _timerObj = Instantiate<GameObject>(_timerPrefab, transform.parent);
-            _timerText = _timerObj.GetComponentInChildren<TMP_Text>();
-            if (_timerText == null)
-            {
-                _timerObj.AddComponent<TMP_Text>();
-            }
-        }
-
 		private void SetupNextTileUI()
 		{
 			GameObject _nextTileObj = Instantiate<GameObject>(_nextTilePrefab, transform.parent);
-			_nextTileText = _nextTileObj.GetComponent<TMP_Text>();
+			_nextTileText = _nextTileObj.GetComponentInChildren<TMP_Text>();
 			if (_nextTileText == null)
 			{
 				_nextTileObj.AddComponent<TMP_Text>();
@@ -83,7 +63,7 @@ namespace CanYouCount
 		private void SetupTimerUI()
 		{
 			GameObject _timerObj = Instantiate<GameObject>(_timerPrefab, transform.parent);
-			_timerText = _timerObj.GetComponent<TMP_Text>();
+			_timerText = _timerObj.GetComponentInChildren<TMP_Text>();
 			if (_timerText == null)
 			{
 				_timerObj.AddComponent<TMP_Text>();
