@@ -1,9 +1,10 @@
-﻿using TMPro;
+﻿using CanYouCount.ObjectPooling;
+using TMPro;
 using UnityEngine;
 
 namespace CanYouCount
 {
-	public class TileRenderer : MonoBehaviour
+	public class TileRenderer : BasicUnityPoolable
 	{
 		[SerializeField]
 		private TMP_Text _tileValueText = null;
