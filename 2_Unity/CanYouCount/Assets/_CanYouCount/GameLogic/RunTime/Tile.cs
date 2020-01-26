@@ -1,6 +1,14 @@
-﻿using UnityEngine;
+﻿namespace CanYouCount
+{ 
+    public struct Tile
+    {
+        private int? _TileValue;
 
-public class Tile : MonoBehaviour
-{
-   
+        public int? TileValue => _TileValue;
+
+        public Tile(int number)
+        {
+            _TileValue = number;
+        }
+    }
 }

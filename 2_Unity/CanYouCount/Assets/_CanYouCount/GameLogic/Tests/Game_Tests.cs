@@ -58,12 +58,12 @@ namespace CanYouCount
 			throw new Exception("Could not find tile by predicate");
 		}
 
-		private static int[] GetVisibleTileValues(Game game)
+		private static int?[] GetVisibleTileValues(Game game)
 		{
-			int[] values = new int[game.VisibleTileCount];
+			int?[] values = new int?[game.VisibleTileCount];
 			for (int i = 0; i < game.VisibleTileCount; i++)
 			{
-				originalValueOrder[i] = game.VisibleTiles[i].TileValue;
+				values[i] = game.VisibleTiles[i].TileValue;
 			}
 			return values;
 		}
@@ -100,10 +100,8 @@ namespace CanYouCount
 			{
 				// Try and get the desired tile
 				var tile = GetVisibleTileByValue(game, i);
-				if (tile == null)
-				{
-					Assert.Fail($"Expected Game.VisibleTiles to contain the numbers [1 to {EXPECTED_NUM_VISIBLE}], but didn't find [{i}]");
-				}
+                Assert.Fail($"Expected Game.VisibleTiles to contain the numbers [1 to {EXPECTED_NUM_VISIBLE}], but didn't find [{i}]");
+				
 			}
 		}
 
