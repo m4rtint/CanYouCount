@@ -42,6 +42,11 @@ namespace CanYouCount
 		public event Action<GameOverInfo> OnGameOver;
 
 		/// <summary>
+		/// Occurs when a hint should be enabled/disabled on a tile
+		/// </summary>
+		public event Action<Tile, bool> OnShowHintOnTile;
+
+		/// <summary>
 		/// Gets the visible tile count.
 		/// </summary>
 		/// <value>The visible tile count.</value>
@@ -67,6 +72,9 @@ namespace CanYouCount
 		private bool _isGameOver;
 
 		private float _lastCorrectTapTime;
+		private float _maxTimeBeforeHint = 3f; // 3 seconds
+		private bool _isShowingHint = false;
+		private Tile _hintedTile = Tile.BlankTile;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="T:CanYouCount.Game"/> class.
@@ -85,6 +93,7 @@ namespace CanYouCount
 			}
 
 			_timer = 0;
+			_lastCorrectTapTime = 0;
 			_isGameOver = false;
 
 			_maxGameTime = maxGameTime;
@@ -105,16 +114,30 @@ namespace CanYouCount
 			if (tappedTile.TileValue == _expectedValue)
 			{
 				_expectedValue = Math.Min(_expectedValue + 1, _totalTileCount);
+				ResetLastCorrectTapTime();
 
 				CheckForGameOver();
 
-				Tile swapTile = CorrectTileTapped(tappedTile);
+				Tile swapTile = GetCorrectTileTapped(tappedTile);
 				OnCorrectTileTapped?.Invoke(tappedTile, swapTile);
 			}
 			else
 			{
 				OnWrongTileTapped?.Invoke(tappedTile);
 			}
+		}
+
+		private void ResetLastCorrectTapTime()
+		{
+			if (_isShowingHint) // Stop showing hint
+			{
+				OnShowHintOnTile?.Invoke(_hintedTile, false);
+
+				_isShowingHint = false;
+				_hintedTile = Tile.BlankTile;
+			}
+
+			_lastCorrectTapTime = _timer;
 		}
 
 		/// <summary>
@@ -129,7 +152,16 @@ namespace CanYouCount
 			}
 
 			_timer += deltaTime;
+
 			CheckForGameOver();
+
+			if (!_isShowingHint && (_timer - _lastCorrectTapTime) >= _maxTimeBeforeHint)
+			{
+				_isShowingHint = true;
+				_hintedTile = new Tile(_expectedValue);
+
+				OnShowHintOnTile?.Invoke(_hintedTile, true);
+			}
 		}
 
 		private bool AreAllVisibleTilesBlank()
@@ -164,7 +196,7 @@ namespace CanYouCount
 			}
 		}
 
-		private Tile CorrectTileTapped(Tile tappedTile)
+		private Tile GetCorrectTileTapped(Tile tappedTile)
 		{
 			for (int i = 0; i < _visibleTiles.Length; i++)
 			{
