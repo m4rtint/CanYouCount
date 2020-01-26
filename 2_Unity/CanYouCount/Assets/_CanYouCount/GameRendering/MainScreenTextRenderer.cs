@@ -5,9 +5,10 @@ using TMPro;
 namespace CanYouCount
 {
     [RequireComponent(typeof(CanvasGroup))]
-    public class CountDownRenderer : MonoBehaviour
+    public class MainScreenTextRenderer : MonoBehaviour
     {
-        public Action OnComplete;
+        public Action OnCountDownComplete;
+        public Action OnGameOverComplete;
 
         [SerializeField]
         private float _timeTakenToAnimate = 1f;
@@ -20,7 +21,15 @@ namespace CanYouCount
         /// </summary>
         public void StartCountDownFrom(int value)
         {
-            AnimateValue(value);
+            AnimateCountDown(value);
+        }
+
+        /// <summary>
+        /// Starts the game over.
+        /// </summary>
+        public void StartGameOver()
+        {
+            AnimateGameOver();
         }
 
         /// <summary>
@@ -32,7 +41,20 @@ namespace CanYouCount
             _canvasGroup.alpha = 1;
         }
 
-        private void AnimateValue(int value)
+        private void AnimateGameOver() 
+        {
+            Reset();
+            SetCountDownText(GameUIContent.GameOver);
+            transform.LeanScale(Vector3.one, _timeTakenToAnimate)
+                .setEase(LeanTweenType.easeOutSine)
+                .setOnComplete(() =>
+            {
+                OnGameOverComplete?.Invoke();
+            });
+        }
+
+
+        private void AnimateCountDown(int value)
         {
             Reset();
             var seq = LeanTween.sequence();
@@ -56,15 +78,15 @@ namespace CanYouCount
             {
                 if (value == 0)
                 {
-                    textToDisplay = "GO";
+                    textToDisplay = GameUIContent.Go;
                 }
 
                 SetCountDownText(textToDisplay);
-                AnimateValue(value);
+                AnimateCountDown(value);
             }
             else
             {
-                OnComplete?.Invoke();
+                OnCountDownComplete?.Invoke();
                 Reset();
             }
         }

@@ -16,7 +16,7 @@ namespace CanYouCount
 		private TMP_Text _nextTileText = null;
 
 		private Game _game = null;
-        private CountDownRenderer _countDownManager = null;
+        private MainScreenTextRenderer _overworldScreenRenderer = null;
 
 		/// <summary>
 		/// Initialize the specified game.
@@ -43,26 +43,26 @@ namespace CanYouCount
         /// </summary>
         public void CleanUp()
         {
-            if (_countDownManager == null) 
+            if (_overworldScreenRenderer == null) 
             { 
                 return; 
             }
 
             SetNextUI(0);
             SetTimeUI(0);
-            Destroy(_countDownManager);
+            Destroy(_overworldScreenRenderer);
         }
 
         private void SetUpCountDown()
         {
             GameObject countDownObj = Instantiate(_countDownPrefab, transform.parent);
-            _countDownManager = countDownObj.GetComponent<CountDownRenderer>();
-            if (_countDownManager == null)
+            _overworldScreenRenderer = countDownObj.GetComponent<MainScreenTextRenderer>();
+            if (_overworldScreenRenderer == null)
             {
-                _countDownManager = countDownObj.AddComponent<CountDownRenderer>();
+                _overworldScreenRenderer = countDownObj.AddComponent<MainScreenTextRenderer>();
             }
 
-            _countDownManager.StartCountDownFrom(3);
+            _overworldScreenRenderer.StartGameOver();
         }
 
         private void SetTimeUI(float time)
