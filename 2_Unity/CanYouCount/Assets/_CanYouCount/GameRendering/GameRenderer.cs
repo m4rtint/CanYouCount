@@ -61,6 +61,14 @@ namespace CanYouCount
 
 			if (_game != null)
 			{
+				// Return all objects to pool
+				for (int i = 0; i < _visibleTileRenderers.Count; i++)
+				{
+					var tileRenderer = _visibleTileRenderers[i];
+					tileRenderer.SetTile(null, Tile.BlankTile);
+					_tileRendererObjectPool.ReturnObjectToPool(tileRenderer);
+				}
+
 				// Unsubscribe old events
 				UnsubscribeFromGameEvents();
 			}

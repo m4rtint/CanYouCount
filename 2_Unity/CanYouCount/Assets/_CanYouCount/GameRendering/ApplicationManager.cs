@@ -48,7 +48,7 @@ namespace CanYouCount
 		private void OnDisable()
 		{
 			_gameRenderer.Cleanup();
-            _userInterfaceManager.CleanUp();
+			_userInterfaceManager.CleanUp();
 		}
 
 		private void Update()
@@ -60,6 +60,11 @@ namespace CanYouCount
 		private void StartNewGame()
 		{
 			_game = new Game(_randomService, _visibleTileCount, _totalTileCount, TimeSpan.FromSeconds(_maxGameTimeInSeconds));
+			_game.OnGameOver += (gameOverInfo) =>
+			{
+				Debug.Log($"GameOver [{(gameOverInfo.IsSuccess ? "SUCCESS" : "FAIL")}]: {gameOverInfo.Time}");
+				StartNewGame();
+			};
 
 			// Create the renderers
 			_gameRenderer.SetGame(_game);
