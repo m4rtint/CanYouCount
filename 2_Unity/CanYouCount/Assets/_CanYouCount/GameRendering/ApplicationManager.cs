@@ -1,9 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace CanYouCount
 {
 	public class ApplicationManager : MonoBehaviour
 	{
+		[Header("Object References")]
+		[SerializeField]
+		private GameRenderer _gameRenderer = null;
+
 		[Header("Game Variables")]
 		[SerializeField]
 		private int _visibleTileCount = 25;
@@ -16,12 +21,28 @@ namespace CanYouCount
 
 		private void OnEnable()
 		{
-			// Create the game
-			_randomService = new SeededRandomService();
+			try
+			{
+				// Intialize Services
+				_randomService = new SeededRandomService();
+
+				// Initialize Renderers
+				_gameRenderer.Initialize();
+
+				StartNewGame();
+			}
+			catch (Exception ex)
+			{
+				PanicHelper.Panic(ex);
+			}
+		}
+
+		private void StartNewGame()
+		{
 			_game = new Game(_randomService, _visibleTileCount, _totalTileCount);
 
 			// Create the renderers
-			// TODO: Create renderers
+			_gameRenderer.SetGame(_game);
 		}
 	}
 }
