@@ -28,9 +28,9 @@ namespace CanYouCount
         /// <summary>
         /// Shows the screen.
         /// </summary>
-        public override void ShowScreen()
+        public override void ShowScreen(bool isInstant = false)
         {
-            base.ShowScreen();
+            base.ShowScreen(isInstant);
             _timeScoreText.text = string.Format(GameUIContent.TwoDecimalPoint, _applicationManager.Game.Timer);
         }
 

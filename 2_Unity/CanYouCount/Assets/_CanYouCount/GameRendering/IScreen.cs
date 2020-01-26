@@ -4,8 +4,8 @@
 	{
 		void InitializeScreen(ApplicationManager appManager);
 
-		void HideScreen();
-		void ShowScreen();
+		void HideScreen(bool isInstant = false);
+		void ShowScreen(bool isInstant = false);
 
 		void UpdateScreen(float deltaTime);
 	}

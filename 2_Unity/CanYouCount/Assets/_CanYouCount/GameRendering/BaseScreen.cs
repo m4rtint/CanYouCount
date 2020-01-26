@@ -17,12 +17,12 @@ namespace CanYouCount
             transform.localPosition = Vector3.zero;
 		}
 
-		public virtual void HideScreen()
+		public virtual void HideScreen(bool isInstant = false)
 		{
 			ScaleAnimation(false);
 		}
 
-		public virtual void ShowScreen()
+		public virtual void ShowScreen(bool isInstant = false)
 		{
 			ScaleAnimation(true);
 		}

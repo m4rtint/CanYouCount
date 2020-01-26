@@ -13,9 +13,9 @@ namespace CanYouCount
 
 		private Game _game = null;
 
-		public override void ShowScreen()
+		public override void ShowScreen(bool isInstant = false)
 		{
-			base.ShowScreen();
+			base.ShowScreen(isInstant);
 
 			_game = _applicationManager.Game;
 
@@ -31,7 +31,7 @@ namespace CanYouCount
 			SetTimeUI(_game?.Timer ?? 0);
 		}
 
-		public override void HideScreen()
+		public override void HideScreen(bool isInstant = false)
 		{
 			// Unsubscribe from game events
 			if (_game != null)
@@ -42,7 +42,7 @@ namespace CanYouCount
 			SetNextUI(1);
 			SetTimeUI(0);
 
-			base.HideScreen();
+			base.HideScreen(isInstant);
 		}
 
 		private void SetTimeUI(float time)

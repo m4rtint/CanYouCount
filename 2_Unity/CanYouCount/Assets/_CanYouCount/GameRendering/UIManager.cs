@@ -49,6 +49,7 @@ namespace CanYouCount
 				case AppStates.Pregame:
 					ChangeCurrentScreen(_inGameScreen);
 
+					SetGameCenterTextVisibility(true);
 					_mainTextRenderer.OnCountDownComplete += HandleCountdownComplete;
 					_mainTextRenderer.StartCountDown();
 
@@ -59,6 +60,7 @@ namespace CanYouCount
 					break;
 
 				case AppStates.GameOverAnimation:
+					SetGameCenterTextVisibility(true);
 					_mainTextRenderer.OnGameOverComplete += HandleGameOverComplete;
 					_mainTextRenderer.StartGameOver();
 
@@ -94,11 +96,18 @@ namespace CanYouCount
 			_mainTextRenderer.transform.localPosition = Vector3.zero;
 		}
 
-		private void HideAllScreens()
+		private void HideAllScreens(bool isInstant = false)
 		{
-			_mainMenuScreen?.HideScreen();
-			_inGameScreen?.HideScreen();
-			_gameOverScreen?.HideScreen();
+			_mainMenuScreen?.HideScreen(isInstant);
+			_inGameScreen?.HideScreen(isInstant);
+			_gameOverScreen?.HideScreen(isInstant);
+
+			SetGameCenterTextVisibility(false);
+		}
+
+		private void SetGameCenterTextVisibility(bool visible)
+		{
+			_mainTextRenderer.gameObject.SetActive(visible);
 		}
 
 		private void ChangeCurrentScreen(BaseScreen newScreen)

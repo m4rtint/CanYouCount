@@ -5,6 +5,7 @@ namespace CanYouCount
 {
 	public enum AppStates
 	{
+		Initial,
 		MainMenu,
 		Pregame,
 		Ingame,
@@ -89,7 +90,6 @@ namespace CanYouCount
 				_uiManager.Initialize(this);
 
 				ChangeState(AppStates.MainMenu);
-				StartNewGame();
 			}
 			catch (Exception ex)
 			{
