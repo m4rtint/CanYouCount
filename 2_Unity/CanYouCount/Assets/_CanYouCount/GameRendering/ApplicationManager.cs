@@ -8,6 +8,8 @@ namespace CanYouCount
 		[Header("Object References")]
 		[SerializeField]
 		private GameRenderer _gameRenderer = null;
+		[SerializeField]
+		private UIManager _userInterfaceManager = null;
 
 		[Header("Game Variables")]
 		[SerializeField]
@@ -17,8 +19,7 @@ namespace CanYouCount
 		private int _totalTileCount = 50;
 
 		private IRandomService _randomService;
-
-		public Game Game { get; private set; }
+		public Game _game;
 
 		private void OnEnable()
 		{
@@ -31,6 +32,9 @@ namespace CanYouCount
 				_gameRenderer.Initialize();
 
 				StartNewGame();
+
+				// Initialize User Interface
+				_userInterfaceManager.Initialize(_game);
 			}
 			catch (Exception ex)
 			{
@@ -45,15 +49,16 @@ namespace CanYouCount
 
 		private void Update()
 		{
-			Game.UpdateGame(Time.deltaTime);
+			_game.UpdateGame(Time.deltaTime);
+			_userInterfaceManager.UpdateUI();
 		}
 
 		private void StartNewGame()
 		{
-			Game = new Game(_randomService, _visibleTileCount, _totalTileCount);
+			_game = new Game(_randomService, _visibleTileCount, _totalTileCount);
 
 			// Create the renderers
-			_gameRenderer.SetGame(Game);
+			_gameRenderer.SetGame(_game);
 		}
 	}
 }
