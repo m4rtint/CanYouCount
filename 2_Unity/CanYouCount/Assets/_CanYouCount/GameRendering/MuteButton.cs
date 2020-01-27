@@ -20,7 +20,7 @@ namespace CanYouCount
         private Button _muteButton;
         private Image _muteImage;
 
-        private void Awake()
+        private void OnEnable()
         {
             SetupButton();
             SetupImage();
