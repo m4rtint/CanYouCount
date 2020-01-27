@@ -18,6 +18,7 @@ namespace CanYouCount
 			_playButton.onClick.RemoveAllListeners();
 			_playButton.onClick.AddListener(() =>
 			{
+				_applicationManager.AudioManager.PlayUIButtonClick();
 				_applicationManager.StartNewGame();
 			});
 

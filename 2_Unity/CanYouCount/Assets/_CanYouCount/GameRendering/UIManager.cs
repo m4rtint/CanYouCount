@@ -14,6 +14,9 @@ namespace CanYouCount
 		private BaseScreen _gameOverScreen = null;
 
 		[SerializeField]
+		private GameObject _tapPreventer = null;
+
+		[SerializeField]
 		private GameCenterTextDisplay _mainTextRenderer = null;
 
 		private ApplicationManager _appManager;
@@ -43,10 +46,14 @@ namespace CanYouCount
 			switch (newState)
 			{
 				case AppStates.MainMenu:
+					PreventTaps(false);
+
 					ChangeCurrentScreen(_mainMenuScreen);
 					break;
 
 				case AppStates.Pregame:
+					PreventTaps(true);
+
 					ChangeCurrentScreen(_inGameScreen);
 
 					SetGameCenterTextVisibility(true);
@@ -57,10 +64,14 @@ namespace CanYouCount
 					break;
 
 				case AppStates.Ingame:
+					PreventTaps(false);
+
 					ChangeCurrentScreen(_inGameScreen);
 					break;
 
 				case AppStates.GameOverAnimation:
+					PreventTaps(true);
+
 					SetGameCenterTextVisibility(true);
 					_mainTextRenderer.OnGameOverComplete += HandleGameOverComplete;
 					_mainTextRenderer.StartGameOver();
@@ -68,6 +79,8 @@ namespace CanYouCount
 					break;
 
 				case AppStates.GameOver:
+					PreventTaps(false);
+
 					ChangeCurrentScreen(_gameOverScreen);
 
 					break;
@@ -104,6 +117,8 @@ namespace CanYouCount
 			_gameOverScreen?.HideScreen(isInstant);
 
 			SetGameCenterTextVisibility(false);
+
+			PreventTaps(false);
 		}
 
 		private void SetGameCenterTextVisibility(bool visible)
@@ -124,6 +139,11 @@ namespace CanYouCount
 			// Show new screen
 			_currentScreen = newScreen;
 			_currentScreen?.ShowScreen();
+		}
+
+		private void PreventTaps(bool prevent)
+		{
+			_tapPreventer.SetActive(prevent);
 		}
 	}
 }
