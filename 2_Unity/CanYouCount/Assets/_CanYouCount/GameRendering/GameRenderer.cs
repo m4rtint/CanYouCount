@@ -47,6 +47,11 @@ namespace CanYouCount
 
 		public void Cleanup()
 		{
+			if(_applicationManager == null || _visibleTileRenderers == null)
+			{
+				return;
+			}
+
 			_applicationManager.OnAppStateChanged -= HandleAppStateChanged;
 
 			// Return all renderers to their object pools

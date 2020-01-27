@@ -6,6 +6,9 @@ namespace CanYouCount
 	[RequireComponent(typeof(RectTransform))]
 	public class UISafeArea : MonoBehaviour
 	{
+		[SerializeField]
+		private int _screenBottomMarginPixels = 0;
+
 		private RectTransform _rectTransform;
 		private Rect _appliedSafeArea;
 
@@ -34,8 +37,8 @@ namespace CanYouCount
 			_appliedSafeArea = safeArea;
 
 			// Convert safe area rectangle from absolute pixels to normalised anchor coordinates
-			Vector2 anchorMin = safeArea.position;
-			Vector2 anchorMax = safeArea.position + safeArea.size;
+			Vector2 anchorMin = safeArea.position + new Vector2(0, _screenBottomMarginPixels);
+			Vector2 anchorMax = safeArea.position + safeArea.size - new Vector2(0, _screenBottomMarginPixels);
 			anchorMin.x /= Screen.width;
 			anchorMin.y /= Screen.height;
 			anchorMax.x /= Screen.width;
