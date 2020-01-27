@@ -8,13 +8,26 @@ namespace CanYouCount
         [SerializeField]
         private AudioModel _model;
         private AudioSource _sfxAudioSource;
+        private bool _isMuted;
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="T:CanYouCount.AudioManager"/> is mute.
         /// </summary>
         /// <value><c>true</c> if is mute; otherwise, <c>false</c>.</value>
         [ShowInInspector]
-        public bool IsMuted { get; set; }
+        public bool IsMuted
+        {
+            get
+            {
+                return _isMuted;
+            }
+
+            set
+            {
+                _isMuted = value;
+                _sfxAudioSource.mute = _isMuted;
+            }
+        }
 
         // Start is called before the first frame update
         private void Awake()
@@ -32,11 +45,8 @@ namespace CanYouCount
         }
 
         private void PlayOneShot(AudioClip clip)
-        {
-            if (!IsMuted)
-            {
-                _sfxAudioSource.PlayOneShot(clip);
-            }
+        { 
+            _sfxAudioSource.PlayOneShot(clip);
         }
 
         /// <summary>
