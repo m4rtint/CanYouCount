@@ -20,6 +20,8 @@ namespace CanYouCount
 		private GameRenderer _gameRenderer = null;
 		[SerializeField]
 		private UIManager _uiManager = null;
+		[SerializeField]
+		private AudioManager _audioManager = null;
 
 		[Header("Game Variables")]
 		[SerializeField]
@@ -38,6 +40,7 @@ namespace CanYouCount
 		private Game _game;
 
 		public Game Game => _game;
+		public AudioManager AudioManager => _audioManager;
 
 		/// <summary>
 		/// Changes the application's state to the provided state
@@ -155,6 +158,15 @@ namespace CanYouCount
 
 		private void HandleGameOver(GameOverInfo gameOverInfo)
 		{
+			if (gameOverInfo.IsSuccess)
+			{
+				AudioManager.PlayWinState();
+			}
+			else
+			{
+				AudioManager.PlayLoseState();
+			}
+
 			Debug.Log($"GameOver [{(gameOverInfo.IsSuccess ? "SUCCESS" : "FAIL")}]: {gameOverInfo.Time} seconds");
 			ChangeState(AppStates.GameOverAnimation);
 		}

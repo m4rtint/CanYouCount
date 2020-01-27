@@ -191,6 +191,9 @@ namespace CanYouCount
 			{
 				_tileRendererObjectPool.ReturnObjectToPool(oldTileRenderer);
 			});
+
+			// Play sound
+			_applicationManager.AudioManager.PlayTileClickCorrect();
 		}
 
 		private void HandleWrongTileTapped(Tile wrongTile)
@@ -198,6 +201,7 @@ namespace CanYouCount
 			// Find the correct renderer
 			var wrongTileRenderer = GetVisibleTileRendererForTile(wrongTile);
 			wrongTileRenderer?.PerformIncorrectTapAnimation();
+			_applicationManager.AudioManager.PlayTileClickWrong();
 		}
 
 		private void HandleShowHintOnTile(Tile hintTile, bool shouldShow)

@@ -52,6 +52,7 @@ namespace CanYouCount
 					SetGameCenterTextVisibility(true);
 					_mainTextRenderer.OnCountDownComplete += HandleCountdownComplete;
 					_mainTextRenderer.StartCountDown();
+					_appManager.AudioManager.PlayCountDown();
 
 					break;
 
