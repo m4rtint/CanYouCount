@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 62c40d688d1aa498d9bff9f4cd34657b, type: 3}
   m_Name: AudioData
   m_EditorClassIdentifier: 
-  _tileClick: {fileID: 8300000, guid: 554864d499b1d489abe790fc85c5f00d, type: 3}
-  _userInterfaceButtonClick: {fileID: 0}
+  _tileClickCorrect: {fileID: 8300000, guid: 554864d499b1d489abe790fc85c5f00d, type: 3}
+  _tileClickWrong: {fileID: 8300000, guid: a5ee82b2efeb74364ac6807b76ea0205, type: 3}
+  _userInterfaceButtonClick: {fileID: 8300000, guid: 1120d5e639ffc47d69b93e603cd5e29e,
+    type: 3}
   _countDown: {fileID: 0}
   _winState: {fileID: 8300000, guid: d087207d6b47e4d409ea4ca99ada1adf, type: 3}
   _loseState: {fileID: 8300000, guid: 72568f1624f20450785d202f3a42b8cd, type: 3}
