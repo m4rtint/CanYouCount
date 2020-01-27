@@ -773,10 +773,57 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1003961500}
+    - target: {fileID: 6559811379661930762, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_text
+      value: '<color=#FFD128>Can You
+
+        <color=#0E6DCB>Count?'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559811379661930762, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_fontSize
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559811379661930762, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559811379661930762, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559811379661930762, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6559811379661930762, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 7119690545218444081, guid: 91ed24e9c15d1744b9637639e3f29005,
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 2389
+      objectReference: {fileID: 0}
+    - target: {fileID: 9038780346634053515, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_Colors.m_NormalColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9038780346634053515, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_Colors.m_NormalColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9038780346634053515, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: m_Colors.m_NormalColor.b
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 91ed24e9c15d1744b9637639e3f29005, type: 3}
