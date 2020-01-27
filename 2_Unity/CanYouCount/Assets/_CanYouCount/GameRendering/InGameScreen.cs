@@ -41,8 +41,7 @@ namespace CanYouCount
 
 			SetNextUI(1);
 			SetTimeUI(0);
-
-			base.HideScreen(isInstant);
+			base.HideScreen(true);
 		}
 
 		private void SetTimeUI(float time)
