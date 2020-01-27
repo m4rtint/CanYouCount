@@ -42,21 +42,33 @@ public class AudioManager : MonoBehaviour
         PlayOneShot(_model.TileClickWrong);
     }
 
+    /// <summary>
+    /// Plaies the count down.
+    /// </summary>
     public void PlayCountDown()
     {
         PlayOneShot(_model.CountDown);
     }
 
+    /// <summary>
+    /// Plaies the UIB utton click.
+    /// </summary>
     public void PlayUIButtonClick()
     {
         PlayOneShot(_model.UIButtonClick);  
     }
 
+    /// <summary>
+    /// Plaies the state of the window.
+    /// </summary>
     public void PlayWinState()
     {
         PlayOneShot(_model.WinState);
     }
 
+    /// <summary>
+    /// Plaies the state of the lose.
+    /// </summary>
     public void PlayLoseState()
     {
         PlayOneShot(_model.LoseState);
