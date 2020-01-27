@@ -5,22 +5,22 @@ public class AudioModel : ScriptableObject
 {
     [Header("Audio Clips")]
     [SerializeField]
-    private AudioClip _tileClickCorrect;
+    private AudioClip _tileClickCorrect = null;
 
     [SerializeField]
-    private AudioClip _tileClickWrong;
+    private AudioClip _tileClickWrong = null;
 
     [SerializeField]
-    private AudioClip _userInterfaceButtonClick;
+    private AudioClip _userInterfaceButtonClick = null;
 
     [SerializeField]
-    private AudioClip _countDown;
+    private AudioClip _countDown = null;
 
     [SerializeField]
-    private AudioClip _winState;
+    private AudioClip _winState = null;
 
     [SerializeField]
-    private AudioClip _loseState;
+    private AudioClip _loseState = null;
 
     /// <summary>
     /// Gets the tile click.
