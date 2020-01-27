@@ -14,6 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileClick: {fileID: 8300000, guid: 554864d499b1d489abe790fc85c5f00d, type: 3}
   _userInterfaceButtonClick: {fileID: 0}
-  _countDown: {fileID: 0}
+  _countDown: {fileID: 8300000, guid: 340af50fb06840442a105770876c6658, type: 3}
   _winState: {fileID: 8300000, guid: d087207d6b47e4d409ea4ca99ada1adf, type: 3}
   _loseState: {fileID: 8300000, guid: 72568f1624f20450785d202f3a42b8cd, type: 3}
