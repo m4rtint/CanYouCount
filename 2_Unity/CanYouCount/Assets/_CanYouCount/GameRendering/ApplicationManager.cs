@@ -83,16 +83,20 @@ namespace CanYouCount
 		{
 			try
 			{
+
 				// Intialize Services
 				_randomService = new SeededRandomService();
 
 				// Initialize Renderer
 				_gameRenderer.Initialize(this);
 
-				// Initialize UI
-				_uiManager.Initialize(this);
+                // Audio Manager
+                _audioManager.Initialize();
 
-				ChangeState(AppStates.MainMenu);
+                // Initialize UI
+                _uiManager.Initialize(this);
+
+                ChangeState(AppStates.MainMenu);
 			}
 			catch (Exception ex)
 			{
