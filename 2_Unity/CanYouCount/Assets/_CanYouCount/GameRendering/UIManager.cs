@@ -18,6 +18,8 @@ namespace CanYouCount
 
 		[SerializeField]
 		private GameCenterTextDisplay _mainTextRenderer = null;
+        [SerializeField]
+        private MuteButton _muteButton = null;
 
 		private ApplicationManager _appManager;
 		private BaseScreen _currentScreen;
@@ -26,8 +28,9 @@ namespace CanYouCount
 		{
 			_appManager = appManager;
 			_appManager.OnAppStateChanged += HandleAppStateChanged;
+            _muteButton.Initialize(_appManager.AudioManager);
 
-			InitializeAllScreens();
+            InitializeAllScreens();
 			HideAllScreens();
 		}
 

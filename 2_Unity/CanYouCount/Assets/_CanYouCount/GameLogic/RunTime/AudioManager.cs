@@ -6,9 +6,10 @@ namespace CanYouCount
     public class AudioManager : MonoBehaviour
     {
         [SerializeField]
-        private AudioModel _model;
+        private AudioModel _model = null;
         private AudioSource _sfxAudioSource;
         private bool _isMuted;
+        private const string MuteKey = "MUTE_KEY";
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="T:CanYouCount.AudioManager"/> is mute.
@@ -24,9 +25,17 @@ namespace CanYouCount
 
             set
             {
-                _isMuted = value;
-                _sfxAudioSource.mute = _isMuted;
+                OnSetMute(value);
             }
+        }
+
+        /// <summary>
+        /// Initialize this instance.
+        /// </summary>
+        public void Initialize()
+        {
+            SetupAudioSource();
+            IsMuted = PlayerPrefs.GetInt(MuteKey, 0) == 1;
         }
 
         // Start is called before the first frame update
@@ -42,6 +51,13 @@ namespace CanYouCount
             {
                 _sfxAudioSource = gameObject.AddComponent<AudioSource>();
             }
+        }
+
+        private void OnSetMute(bool isMute)
+        {
+            _isMuted = isMute;
+            _sfxAudioSource.mute = _isMuted;
+            PlayerPrefs.SetInt(MuteKey, _isMuted ? 1 : 0);
         }
 
         private void PlayOneShot(AudioClip clip)

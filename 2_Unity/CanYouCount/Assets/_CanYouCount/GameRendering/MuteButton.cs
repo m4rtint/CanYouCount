@@ -7,23 +7,23 @@ namespace CanYouCount
     [RequireComponent(typeof(Button))]
     public class MuteButton : MonoBehaviour
     {
-        // TODO : THIS SHOULD NOT HAVE DIRECT ACCES TO AUDIO MANAGER
-        [SerializeField]
         private AudioManager _manager = null;
 
         [SerializeField]
-        private Sprite _muted;
+        private Sprite _muted = null;
 
         [SerializeField]
-        private Sprite _unmuted;
+        private Sprite _unmuted = null;
 
         private Button _muteButton;
         private Image _muteImage;
 
-        private void OnEnable()
+        public void Initialize(AudioManager manager)
         {
             SetupButton();
             SetupImage();
+            _manager = manager;
+            UpdateMuteImage();
             _muteButton.onClick.RemoveAllListeners();
             _muteButton.onClick.AddListener(() => switchMuteState());
         }
@@ -46,9 +46,8 @@ namespace CanYouCount
             }
         }
 
-        private void switchMuteState()
+        private void UpdateMuteImage()
         {
-            _manager.IsMuted = !_manager.IsMuted;
             Sprite sprite = _unmuted;
             if (_manager.IsMuted)
             {
@@ -56,6 +55,12 @@ namespace CanYouCount
             }
 
             _muteImage.sprite = sprite;
+        }
+
+        private void switchMuteState()
+        {
+            _manager.IsMuted = !_manager.IsMuted;
+            UpdateMuteImage();
         }
     }
 }
