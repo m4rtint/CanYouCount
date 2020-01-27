@@ -84,7 +84,7 @@ namespace CanYouCount
 				_randomService = new SeededRandomService();
 
 				// Initialize Renderer
-				_gameRenderer.Initialize();
+				_gameRenderer.Initialize(this);
 
 				// Initialize UI
 				_uiManager.Initialize(this);

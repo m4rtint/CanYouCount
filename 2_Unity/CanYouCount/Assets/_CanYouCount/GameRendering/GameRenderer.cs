@@ -25,10 +25,15 @@ namespace CanYouCount
 		private BasicUnityObjectPool<TileRenderer> _tileRendererObjectPool = null;
 		private List<TileRenderer> _visibleTileRenderers;
 
+		private ApplicationManager _applicationManager;
 		private Game _game;
 
-		public void Initialize()
+		public void Initialize(ApplicationManager applicationManager)
 		{
+			_applicationManager = applicationManager;
+			// Subscribe to events
+			_applicationManager.OnAppStateChanged += HandleAppStateChanged;
+
 			_tileRendererObjectPool = new BasicUnityObjectPool<TileRenderer>(
 				allocationFunction: () =>
 				{
@@ -42,6 +47,13 @@ namespace CanYouCount
 
 		public void Cleanup()
 		{
+			if(_applicationManager == null || _visibleTileRenderers == null)
+			{
+				return;
+			}
+
+			_applicationManager.OnAppStateChanged -= HandleAppStateChanged;
+
 			// Return all renderers to their object pools
 			for (int i = 0; i < _visibleTileRenderers.Count; i++)
 			{
@@ -105,12 +117,14 @@ namespace CanYouCount
 		{
 			_game.OnWrongTileTapped += HandleWrongTileTapped;
 			_game.OnCorrectTileTapped += HandleSwapTile;
+			_game.OnShowHintOnTile += HandleShowHintOnTile;
 		}
 
 		private void UnsubscribeFromGameEvents()
 		{
 			_game.OnWrongTileTapped -= HandleWrongTileTapped;
 			_game.OnCorrectTileTapped -= HandleSwapTile;
+			_game.OnShowHintOnTile -= HandleShowHintOnTile;
 		}
 
 		private void LayoutTileRenderers()
@@ -146,6 +160,12 @@ namespace CanYouCount
 			return -1;
 		}
 
+		private void HandleAppStateChanged(AppStates newState)
+		{
+			bool shouldBeActive = newState == AppStates.Pregame || newState == AppStates.Ingame || newState == AppStates.GameOverAnimation;
+			gameObject.SetActive(shouldBeActive);
+		}
+
 		private void HandleSwapTile(Tile oldTile, Tile newTile)
 		{
 			// Get the old tile renderer
@@ -178,6 +198,15 @@ namespace CanYouCount
 			// Find the correct renderer
 			var wrongTileRenderer = GetVisibleTileRendererForTile(wrongTile);
 			wrongTileRenderer?.PerformIncorrectTapAnimation();
+		}
+
+		private void HandleShowHintOnTile(Tile hintTile, bool shouldShow)
+		{
+			var tileRenderer = GetVisibleTileRendererForTile(hintTile);
+			if (tileRenderer != null)
+			{
+				tileRenderer.ShowHint(shouldShow);
+			}
 		}
 	}
 }
