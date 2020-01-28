@@ -7,13 +7,13 @@ namespace CanYouCount
 	{
 		[Header("UI Binding")]
 		[SerializeField]
-		private TMP_Text _timeScoreText;
+		private TMP_Text _timeScoreText = null;
 
 		[Header("Buttons")]
 		[SerializeField]
-		private Button _menuButton;
+		private Button _menuButton = null;
 		[SerializeField]
-		private Button _retryButton;
+		private Button _retryButton = null;
 
 		/// <summary>
 		/// Initializes the screen.
