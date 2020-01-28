@@ -111,6 +111,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gameRenderer: {fileID: 0}
-  _userInterfaceManager: {fileID: 0}
+  _uiManager: {fileID: 0}
+  _audioManager: {fileID: 0}
+  _adMobService: {fileID: 0}
   _visibleTileCount: 25
   _totalTileCount: 50
+  _maxGameTimeInSeconds: 300

@@ -22,6 +22,8 @@ namespace CanYouCount
 		private UIManager _uiManager = null;
 		[SerializeField]
 		private AudioManager _audioManager = null;
+        [SerializeField]
+        private AdMobService _adMobService = null;
 
 		[Header("Game Variables")]
 		[SerializeField]
@@ -77,7 +79,10 @@ namespace CanYouCount
 
 			// Change state to pregame
 			ChangeState(AppStates.Pregame);
-		}
+            
+            _adMobService?.RequestInterstitial();
+
+        }
 
 		private void OnEnable()
 		{
