@@ -5,8 +5,10 @@ namespace CanYouCount
 	/// <summary>This class adjusts the size of the RectTransform it is attached to stay within the Screen's safe area (no notches/cutouts)</summary>
 	[RequireComponent(typeof(RectTransform))]
 	public class UISafeArea : MonoBehaviour
-	{
-		[SerializeField]
+    {
+        [SerializeField]
+        private int _screenTopMarginPixels = 0;
+        [SerializeField]
 		private int _screenBottomMarginPixels = 0;
 
 		private RectTransform _rectTransform;
@@ -38,7 +40,7 @@ namespace CanYouCount
 
 			// Convert safe area rectangle from absolute pixels to normalised anchor coordinates
 			Vector2 anchorMin = safeArea.position + new Vector2(0, _screenBottomMarginPixels);
-			Vector2 anchorMax = safeArea.position + safeArea.size - new Vector2(0, _screenBottomMarginPixels);
+			Vector2 anchorMax = safeArea.position + safeArea.size - new Vector2(0, _screenTopMarginPixels);
 			anchorMin.x /= Screen.width;
 			anchorMin.y /= Screen.height;
 			anchorMax.x /= Screen.width;

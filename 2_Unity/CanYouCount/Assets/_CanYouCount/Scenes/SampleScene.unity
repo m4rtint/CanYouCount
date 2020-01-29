@@ -466,6 +466,11 @@ PrefabInstance:
       propertyPath: _screenBottomMarginPixels
       value: 200
       objectReference: {fileID: 0}
+    - target: {fileID: 1106151502245970934, guid: 91ed24e9c15d1744b9637639e3f29005,
+        type: 3}
+      propertyPath: _screenTopMarginPixels
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 2771361522390956565, guid: 91ed24e9c15d1744b9637639e3f29005,
         type: 3}
       propertyPath: _manager
