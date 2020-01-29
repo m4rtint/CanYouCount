@@ -761,6 +761,11 @@ PrefabInstance:
       propertyPath: ForceFakeAds
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2429568902995398556, guid: 77c112052bcd847e6aa0d77fa897066a,
+        type: 3}
+      propertyPath: _timesBeforeAd
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3705916460867868873, guid: 77c112052bcd847e6aa0d77fa897066a,
         type: 3}
       propertyPath: m_LocalPosition.x

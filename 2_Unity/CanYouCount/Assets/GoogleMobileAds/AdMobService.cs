@@ -16,11 +16,17 @@ public class AdMobService : MonoBehaviour
     [SerializeField]
     private string _iOSAppId = "ca-app-pub-2541894783789070~8073524777";
 
-    [Header("Ad Unit Id")]
+    [Header("Ad Unit Banner Id")]
     [SerializeField]
-    private string _androidAdUnitId = "ca-app-pub-2541894783789070/5797348249";
+    private string _androidBannerAdUnitId = "ca-app-pub-2541894783789070/5797348249";
     [SerializeField]
-    private string _iOSAdUnitId = "ca-app-pub-2541894783789070/9545021568";
+    private string _iOSBannerAdUnitId = "ca-app-pub-2541894783789070/9545021568";
+
+    [Header("Ad Unit Interstitial")]
+    [SerializeField]
+    private string _androidInterstitialAdUnitId = "ca-app-pub-2541894783789070/7437269952";
+    [SerializeField]
+    private string _iOSInterstitialAdUnitId = "ca-app-pub-2541894783789070/4427963238";
     [SerializeField]
     private int _timesBeforeAd = 3;
 
@@ -43,7 +49,7 @@ public class AdMobService : MonoBehaviour
     private bool ShowAdIfNeeded() 
     {
         int currentCount = PlayerPrefs.GetInt(KEY, 0);
-        bool shouldShow = currentCount >= 3;
+        bool shouldShow = currentCount >= _timesBeforeAd;
         int valueToSetTo = shouldShow ? 0 : currentCount + 1;
 
         PlayerPrefs.SetInt(KEY, valueToSetTo);
@@ -134,6 +140,13 @@ public class AdMobService : MonoBehaviour
 
     private void SetupInterstitial()
     {
+#if UNITY_ANDROID
+        adUnitId = _androidInterstitialAdUnitId;
+#endif
+
+#if UNITY_IPHONE
+        adUnitId = _iOSInterstitialAdUnitId;
+#endif
         // Initialize an InterstitialAd.
         this._interstitial = new InterstitialAd(adUnitId);
         // Create an empty ad request.
@@ -145,11 +158,11 @@ public class AdMobService : MonoBehaviour
     private void RequestBanner()
     {
 #if UNITY_ANDROID
-        adUnitId = _androidAdUnitId;
+        adUnitId = _androidBannerAdUnitId;
 #endif
 
 #if UNITY_IPHONE
-        adUnitId = _iOSAdUnitId;
+        adUnitId = _iOSBannerAdUnitId;
 #endif
 
         // Create a 320x50 banner at the top of the screen.
