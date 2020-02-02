@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using UnityEngine;
 
 namespace CanYouCount
@@ -7,6 +8,7 @@ namespace CanYouCount
 	{
 		Initial,
 		MainMenu,
+		Leaderboard,
 		Pregame,
 		Ingame,
 		GameOverAnimation,
@@ -22,8 +24,10 @@ namespace CanYouCount
 		private UIManager _uiManager = null;
 		[SerializeField]
 		private AudioManager _audioManager = null;
-        [SerializeField]
-        private AdMobService _adMobService = null;
+		[SerializeField]
+		private AdMobService _adMobService = null;
+		[SerializeField]
+		private LeaderboardManager _leaderboardManager = null;
 
 		[Header("Game Variables")]
 		[SerializeField]
@@ -43,6 +47,40 @@ namespace CanYouCount
 
 		public Game Game => _game;
 		public AudioManager AudioManager => _audioManager;
+		public LeaderboardManager LeaderboardManager => _leaderboardManager;
+
+		public string PlayerName
+		{
+			get
+			{
+				return PlayerPrefs.GetString("PlayerName");
+			}
+			set
+			{
+				var userName = value;
+				userName = userName.Trim();
+				userName = userName.Substring(0, Mathf.Min(userName.Length, 12));
+
+				if (userName.Length < 1)
+				{
+					return;
+				}
+
+				if (userName == PlayerName)
+				{
+					return;
+				}
+
+				PlayerPrefs.SetString("PlayerName", userName);
+
+				// Update leaderboard entry if needed
+				_leaderboardManager.SubmitLeaderboardEntry(new LeaderboardEntry()
+				{
+					UserName = userName,
+					TimeScore = float.MaxValue
+				});
+			}
+		}
 
 		/// <summary>
 		/// Changes the application's state to the provided state
@@ -79,29 +117,34 @@ namespace CanYouCount
 
 			// Change state to pregame
 			ChangeState(AppStates.Pregame);
-            
-            _adMobService?.RequestInterstitial();
 
-        }
+			_adMobService?.RequestInterstitial();
+		}
 
 		private void OnEnable()
 		{
 			try
 			{
+				// Set player name if never set before
+				if (string.IsNullOrWhiteSpace(PlayerName))
+				{
+					PlayerName = "Player";
+				}
 
 				// Intialize Services
 				_randomService = new SeededRandomService();
+				_leaderboardManager.Initialize(this);
 
 				// Initialize Renderer
 				_gameRenderer.Initialize(this);
 
-                // Audio Manager
-                _audioManager.Initialize();
+				// Audio Manager
+				_audioManager.Initialize();
 
-                // Initialize UI
-                _uiManager.Initialize(this);
+				// Initialize UI
+				_uiManager.Initialize(this);
 
-                ChangeState(AppStates.MainMenu);
+				ChangeState(AppStates.MainMenu);
 			}
 			catch (Exception ex)
 			{
@@ -170,6 +213,12 @@ namespace CanYouCount
 			if (gameOverInfo.IsSuccess)
 			{
 				AudioManager.PlayWinState();
+
+				_leaderboardManager.SubmitLeaderboardEntry(new LeaderboardEntry()
+				{
+					UserName = PlayerName,
+					TimeScore = gameOverInfo.Time
+				});
 			}
 			else
 			{

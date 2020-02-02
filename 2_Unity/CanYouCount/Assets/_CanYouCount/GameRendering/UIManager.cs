@@ -9,6 +9,8 @@ namespace CanYouCount
 		[SerializeField]
 		private BaseScreen _mainMenuScreen = null;
 		[SerializeField]
+		private BaseScreen _leaderboardScreen = null;
+		[SerializeField]
 		private BaseScreen _inGameScreen = null;
 		[SerializeField]
 		private BaseScreen _gameOverScreen = null;
@@ -18,8 +20,8 @@ namespace CanYouCount
 
 		[SerializeField]
 		private GameCenterTextDisplay _mainTextRenderer = null;
-        [SerializeField]
-        private MuteButton _muteButton = null;
+		[SerializeField]
+		private MuteButton _muteButton = null;
 
 		private ApplicationManager _appManager;
 		private BaseScreen _currentScreen;
@@ -28,9 +30,9 @@ namespace CanYouCount
 		{
 			_appManager = appManager;
 			_appManager.OnAppStateChanged += HandleAppStateChanged;
-            _muteButton.Initialize(_appManager.AudioManager);
+			_muteButton.Initialize(_appManager.AudioManager);
 
-            InitializeAllScreens();
+			InitializeAllScreens();
 			HideAllScreens();
 		}
 
@@ -52,6 +54,12 @@ namespace CanYouCount
 					PreventTaps(false);
 
 					ChangeCurrentScreen(_mainMenuScreen);
+					break;
+
+				case AppStates.Leaderboard:
+					PreventTaps(false);
+					
+					ChangeCurrentScreen(_leaderboardScreen);
 					break;
 
 				case AppStates.Pregame:
@@ -107,6 +115,7 @@ namespace CanYouCount
 		private void InitializeAllScreens()
 		{
 			_mainMenuScreen?.InitializeScreen(_appManager);
+			_leaderboardScreen?.InitializeScreen(_appManager);
 			_inGameScreen?.InitializeScreen(_appManager);
 			_gameOverScreen?.InitializeScreen(_appManager);
 
@@ -116,6 +125,7 @@ namespace CanYouCount
 		private void HideAllScreens(bool isInstant = false)
 		{
 			_mainMenuScreen?.HideScreen(isInstant);
+			_leaderboardScreen?.HideScreen(isInstant);
 			_inGameScreen?.HideScreen(isInstant);
 			_gameOverScreen?.HideScreen(isInstant);
 
