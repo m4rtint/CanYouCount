@@ -63,7 +63,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Can You Count?
+  m_text: '<color=#FFD128>Can You
+
+    <color=#0E6DCB>Count?'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: d7a1a481ce9a4452993c78105432e2c0, type: 2}
   m_sharedMaterial: {fileID: 2221873231683479370, guid: d7a1a481ce9a4452993c78105432e2c0,
@@ -428,7 +430,7 @@ MonoBehaviour:
     m_SelectOnRight: {fileID: 0}
   m_Transition: 1
   m_Colors:
-    m_NormalColor: {r: 1, g: 0.81960785, b: 0.15686275, a: 1}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.1764706, g: 0.43137258, b: 0.7686275, a: 1}
     m_PressedColor: {r: 0.1764706, g: 0.43137258, b: 0.7686275, a: 1}
     m_SelectedColor: {r: 0.1764706, g: 0.43137258, b: 0.7686275, a: 1}
