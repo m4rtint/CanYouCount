@@ -17,7 +17,8 @@ namespace CanYouCount
 
 	public class ApplicationManager : MonoBehaviour
 	{
-		[Header("Object References")]
+        private const String _PlayerNameKey = "PlayerName";
+        [Header("Object References")]
 		[SerializeField]
 		private GameRenderer _gameRenderer = null;
 		[SerializeField]
@@ -53,7 +54,7 @@ namespace CanYouCount
 		{
 			get
 			{
-				return PlayerPrefs.GetString("PlayerName");
+				return PlayerPrefs.GetString(_PlayerNameKey);
 			}
 			set
 			{
@@ -61,17 +62,12 @@ namespace CanYouCount
 				userName = userName.Trim();
 				userName = userName.Substring(0, Mathf.Min(userName.Length, 12));
 
-				if (userName.Length < 1)
+				if (userName.Length < 1 || userName == PlayerName)
 				{
 					return;
 				}
 
-				if (userName == PlayerName)
-				{
-					return;
-				}
-
-				PlayerPrefs.SetString("PlayerName", userName);
+				PlayerPrefs.SetString(_PlayerNameKey, userName);
 
 				// Update leaderboard entry if needed
 				_leaderboardManager.SubmitLeaderboardEntry(new LeaderboardEntry()
@@ -124,16 +120,17 @@ namespace CanYouCount
 		private void OnEnable()
 		{
 			try
-			{
-				// Set player name if never set before
-				if (string.IsNullOrWhiteSpace(PlayerName))
-				{
-					PlayerName = "Player";
-				}
+            {
 
-				// Intialize Services
-				_randomService = new SeededRandomService();
-				_leaderboardManager.Initialize(this);
+                // Intialize Services
+                _randomService = new SeededRandomService();
+                _leaderboardManager.Initialize(this);
+
+                // Set player name if never set before
+                if (string.IsNullOrWhiteSpace(PlayerName))
+				{
+					PlayerName = "Player_" + _randomService.RandInt(0, 1000);
+				}
 
 				// Initialize Renderer
 				_gameRenderer.Initialize(this);
