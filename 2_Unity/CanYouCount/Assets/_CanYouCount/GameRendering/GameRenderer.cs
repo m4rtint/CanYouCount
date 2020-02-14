@@ -21,6 +21,8 @@ namespace CanYouCount
 		private float _tilePadding = 0.5f;
 		[SerializeField]
 		private float _tileSize = 1;
+        [SerializeField]
+        private float _topGridPadding = 1;
 
 		private BasicUnityObjectPool<TileRenderer> _tileRendererObjectPool = null;
 		private List<TileRenderer> _visibleTileRenderers;
@@ -134,7 +136,7 @@ namespace CanYouCount
 				var renderer = _visibleTileRenderers[i];
 
 				float x = (i % _gridWidth) * (_tileSize + _tilePadding * 2) + _tilePadding;
-				float y = -(i / _gridWidth) * (_tileSize + _tilePadding * 2) + _tilePadding;
+				float y = -(i / _gridWidth) * (_tileSize + _tilePadding * 2) - _topGridPadding + _tilePadding;
 
 				renderer.transform.localPosition = new Vector3(x, y, 0);
 			}

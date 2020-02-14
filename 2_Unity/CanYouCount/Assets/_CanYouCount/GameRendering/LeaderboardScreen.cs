@@ -56,12 +56,12 @@ namespace CanYouCount
 			DisableAllLeaderboardEntries();
 
 			// Re-enable and update required entries
-			var entryCount = Mathf.Max(leaderboardEntries.Count, NUMBER_OF_LEADERBOARD_ENTRIES);
+			var entryCount = Mathf.Min(leaderboardEntries.Count, NUMBER_OF_LEADERBOARD_ENTRIES);
 			for (int i = 0; i < entryCount; i++)
 			{
-				_leaderboardEntryUIs[i].gameObject.SetActive(true);
-				_leaderboardEntryUIs[i].UpdateEntry(i + 1, leaderboardEntries[i]);
-			}
+                _leaderboardEntryUIs[i].gameObject.SetActive(true);
+                _leaderboardEntryUIs[i].UpdateEntry(i + 1, leaderboardEntries[i]);
+            }
 		}
 
 		private void DisableAllLeaderboardEntries()

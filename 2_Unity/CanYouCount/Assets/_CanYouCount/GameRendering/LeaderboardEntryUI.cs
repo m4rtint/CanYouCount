@@ -14,6 +14,11 @@ namespace CanYouCount
 		[SerializeField]
 		private TMP_Text _scoreText = null;
 
+        /// <summary>
+        /// Updates the entry.
+        /// </summary>
+        /// <param name="place">Place.</param>
+        /// <param name="entry">Entry.</param>
 		public void UpdateEntry(int place, LeaderboardEntry entry)
 		{
 			_placeText.text = place.ToString();
