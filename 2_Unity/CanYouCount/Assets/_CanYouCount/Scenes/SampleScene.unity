@@ -389,6 +389,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Leaderboard Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 941480932626910501, guid: f510c438f6d711440905e5a1ce649968,
+        type: 3}
+      propertyPath: _leaderboardPathAndID
+      value: CYC2020/Leaderboard-GGJ2020
+      objectReference: {fileID: 0}
     - target: {fileID: 941480932626910502, guid: f510c438f6d711440905e5a1ce649968,
         type: 3}
       propertyPath: m_LocalPosition.x

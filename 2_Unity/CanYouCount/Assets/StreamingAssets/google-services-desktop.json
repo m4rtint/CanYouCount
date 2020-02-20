@@ -1,40 +1,37 @@
 {
-  "project_info": {
-    "project_number": "433971752222",
-    "firebase_url": "https://canyoucount2020-1234.firebaseio.com",
-    "project_id": "canyoucount2020-1234",
-    "storage_bucket": "canyoucount2020-1234.appspot.com"
-  },
   "client": [
     {
+      "services": {
+        "appinvite_service": {
+          "status": 1
+        }, 
+        "analytics_service": {
+          "status": 0
+        }
+      }, 
+      "oauth_client": [
+        {
+          "client_id": "433971752222-ccn7hlgoqiup7lk8baeusoshrj65m5em.apps.googleusercontent.com"
+        }
+      ], 
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGAu2qM1cShd2JBAOPXfiu4Br_D3jXDIg"
+        }
+      ], 
       "client_info": {
-        "mobilesdk_app_id": "1:433971752222:android:e9a67e8242b6066fde6d0f",
+        "mobilesdk_app_id": "1:433971752222:ios:22c4c311ab464802de6d0f", 
         "android_client_info": {
           "package_name": "com.JWCTwenyTwenty.CanYouCount"
         }
-      },
-      "oauth_client": [
-        {
-          "client_id": "433971752222-pl8q4k5jkck3r4ul6i0dj1p86hhr7fir.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB-aDDfdlWhWJ-hIMs4Q9EonHW7yd4Puyc"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "433971752222-pl8q4k5jkck3r4ul6i0dj1p86hhr7fir.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
       }
     }
-  ],
-  "configuration_version": "1"
+  ], 
+  "configuration_version": "1", 
+  "project_info": {
+    "storage_bucket": "canyoucount2020-1234.appspot.com", 
+    "project_id": "canyoucount2020-1234", 
+    "firebase_url": "https://canyoucount2020-1234.firebaseio.com", 
+    "project_number": "433971752222"
+  }
 }
